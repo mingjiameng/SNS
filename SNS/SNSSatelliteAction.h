@@ -10,7 +10,8 @@
 
 typedef NS_ENUM(NSInteger, SNSSatelliteActionType) {
     SNSSatelliteActionTypeAdjusting = 1, // 姿态调整
-    SNSSatelliteActionTypeImaging // 成像
+    SNSSatelliteActionTypeImaging, // 成像
+    SNSSatelliteActionTypeTransporting // 数据传输
 };
 
 
@@ -21,7 +22,7 @@ typedef NS_ENUM(NSInteger, SNSSatelliteActionType) {
 @property (nonatomic) SNSSatelliteTime expectedTimeCost; // 理论上要花费的时间
 @property (nonatomic) SNSSatelliteTime timeUsed; // 已经花费的时间
 
+@property (nonatomic) SNSSatelliteTime ExpectedStartTime;
 @property (nonatomic) SNSSatelliteTime startTime;
-@property (nonatomic) SNSSatelliteTime endTime;
 
 @end

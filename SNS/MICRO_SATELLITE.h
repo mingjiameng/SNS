@@ -19,12 +19,14 @@ typedef double SNSResulotionLevel; // 单位:米
 typedef double SNSScanWidth; // 单位:米
 typedef int SNSPriorityLevel;
 
+#import "SNSCoreCenter.h"
+
+#define SYSTEM_TIME [[SNSCoreCenter sharedCoreCenter] systemTime]
 
 #define MINIMUM_DATA_PACKAGE_COLLECTION_SIZE 7000
 
 #define EXPECTED_SIMULATION_TIME 86400 // 单位：秒，1d * 24h * 60min * 60sec
 #define SIMULATION_TIME_STEP 1 // 仿真时间步长
-
 
 #define EPS_ZERO 1e-10
 

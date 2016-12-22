@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "SNSSatelliteAntenna.h"
 
 @class SNSSatellite;
 
@@ -47,7 +48,7 @@ typedef struct {
 @property (nonatomic) SNSNetworkFlowSize bufferedDataSize; // 缓冲区已缓存的数据量
 
 // 天线
-//@property (nonatomic, strong, nonnull) NSArray<SNSSatelliteAntenna *> *antennas;
+@property (nonatomic, strong, nonnull) NSArray<SNSSatelliteAntenna *> *antennas;
 
 
 

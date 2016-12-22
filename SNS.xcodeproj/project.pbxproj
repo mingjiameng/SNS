@@ -23,6 +23,9 @@
 		4413B4A41E0A6A1900DD7600 /* SNSSGDPCTTaskExecutionQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4A31E0A6A1900DD7600 /* SNSSGDPCTTaskExecutionQueue.m */; };
 		4413B4AB1E0A803A00DD7600 /* SNSCoreCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4AA1E0A803A00DD7600 /* SNSCoreCenter.m */; };
 		4413B4AD1E0A80AE00DD7600 /* SNSDetailDetectSatellite.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4AC1E0A80AE00DD7600 /* SNSDetailDetectSatellite.m */; };
+		4413B4B01E0B5F0E00DD7600 /* SNSSatelliteAntenna.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4AF1E0B5F0E00DD7600 /* SNSSatelliteAntenna.m */; };
+		4413B4B31E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4B21E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m */; };
+		4413B4B61E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4B51E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -72,6 +75,12 @@
 		4413B4A71E0A800300DD7600 /* SNSCoreCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSCoreCenter.h; sourceTree = "<group>"; };
 		4413B4AA1E0A803A00DD7600 /* SNSCoreCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSCoreCenter.m; sourceTree = "<group>"; };
 		4413B4AC1E0A80AE00DD7600 /* SNSDetailDetectSatellite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSDetailDetectSatellite.m; sourceTree = "<group>"; };
+		4413B4AE1E0B5F0E00DD7600 /* SNSSatelliteAntenna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSatelliteAntenna.h; sourceTree = "<group>"; };
+		4413B4AF1E0B5F0E00DD7600 /* SNSSatelliteAntenna.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSatelliteAntenna.m; sourceTree = "<group>"; };
+		4413B4B11E0B6B5400DD7600 /* SNSUserSatelliteAntenna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSUserSatelliteAntenna.h; sourceTree = "<group>"; };
+		4413B4B21E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSUserSatelliteAntenna.m; sourceTree = "<group>"; };
+		4413B4B41E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSDelaySatelliteAntenna.h; sourceTree = "<group>"; };
+		4413B4B51E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSDelaySatelliteAntenna.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +177,12 @@
 				4413B4961E0A2B9200DD7600 /* MICRO_SATELLITE.h */,
 				4413B4991E0A5B6900DD7600 /* SNSDelaySatellite.h */,
 				4413B49A1E0A5B6A00DD7600 /* SNSDelaySatellite.m */,
+				4413B4AE1E0B5F0E00DD7600 /* SNSSatelliteAntenna.h */,
+				4413B4AF1E0B5F0E00DD7600 /* SNSSatelliteAntenna.m */,
+				4413B4B11E0B6B5400DD7600 /* SNSUserSatelliteAntenna.h */,
+				4413B4B21E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m */,
+				4413B4B41E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.h */,
+				4413B4B51E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m */,
 			);
 			name = Satellites;
 			sourceTree = "<group>";
@@ -249,10 +264,13 @@
 				4413B4A11E0A693600DD7600 /* SNSSGDPCTTaskExecution.m in Sources */,
 				4413B4AB1E0A803A00DD7600 /* SNSCoreCenter.m in Sources */,
 				4413B4911E0A1DBD00DD7600 /* SNSSGTaskExecutionQueue.m in Sources */,
+				4413B4B31E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m in Sources */,
 				4413B4A41E0A6A1900DD7600 /* SNSSGDPCTTaskExecutionQueue.m in Sources */,
+				4413B4B01E0B5F0E00DD7600 /* SNSSatelliteAntenna.m in Sources */,
 				4413B4661E0A0C5C00DD7600 /* SNSNetworkManageCenter.m in Sources */,
 				4413B4701E0A109B00DD7600 /* SNSSatellite.m in Sources */,
 				4413B4AD1E0A80AE00DD7600 /* SNSDetailDetectSatellite.m in Sources */,
+				4413B4B61E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m in Sources */,
 				4413B48B1E0A1DAB00DD7600 /* SNSSatelliteGraphicTask.m in Sources */,
 				4413B4941E0A2B3500DD7600 /* SNSSatelliteAction.m in Sources */,
 				4413B49B1E0A5B6A00DD7600 /* SNSDelaySatellite.m in Sources */,
@@ -386,6 +404,7 @@
 				4413B4591E0A0A9B00DD7600 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

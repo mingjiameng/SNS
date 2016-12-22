@@ -17,7 +17,7 @@
 #import "SNSSGDPBufferedQueue.h"
 #import "SNSSGDPCTTaskExecutionQueue.h"
 
-
+#import "SNSSatelliteAntenna.h"
 
 @interface SNSDetailDetectSatellite ()
 
@@ -26,7 +26,7 @@
 @property (nonatomic, strong, nonnull) SNSSGDPCTTaskExecutionQueue *transmissionTaskQueue;
 
 @property (nonatomic, strong, nullable) SNSSatelliteGraphicTaskExecution *taskExecuting; // 正在执行中的成像任务
-@property (nonatomic, strong, nullable) SNSSGDPCTTaskExecution *dpcSending;
+
 
 
 @end
@@ -71,19 +71,17 @@
     if (_dataPackageBufferedQueue.bufferedFlowSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
         SNSSGDPCTTaskExecution *newTask = [[SNSSGDPCTTaskExecution alloc] init];
         newTask.dataPackageCollection = [_dataPackageBufferedQueue productDataPackageCollection];
-        [_transmissionTaskQueue addTransmissionTask:newTask];
+        
+        for (SNSSatelliteAntenna *antenna in self.antennas) {
+            if (antenna.type == SNSSatelliteAntennaFunctionTypeSendData) {
+                [antenna addSendingTransmissionTask:newTask];
+                break;
+            }
+        }
     }
     
-    if (_dpcSending == nil) {
-        _dpcSending = [_transmissionTaskQueue pop];
-    }
-    else {
-        if (_dpcSending.state == SNSSGDPCTTaskExecutionStateCompleted) {
-            _dpcSending = [_transmissionTaskQueue pop];
-        }
-        else {
-            [_dpcSending continueAction];
-        }
+    for (SNSSatelliteAntenna *antenna in self.antennas) {
+        [antenna continueAction];
     }
     
 }

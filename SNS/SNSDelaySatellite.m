@@ -13,6 +13,10 @@
 - (void)updateState
 {
     [super updateState];
+    
+    for (SNSSatelliteAntenna *antenna in self.antennas) {
+        [antenna continueAction];
+    }
 }
 
 @end

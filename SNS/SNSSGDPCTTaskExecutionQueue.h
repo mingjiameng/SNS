@@ -13,7 +13,6 @@
 @interface SNSSGDPCTTaskExecutionQueue : NSObject
 
 - (nullable SNSSGDPCTTaskExecution *)pop;
-
 - (void)addTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)task;
 
 @end
