@@ -19,6 +19,7 @@
 - (void)addSendingTransmissionTask:(SNSSGDPCTTaskExecution *)task
 {
     task.fromAntenna = self;
+    task.state = SNSSGDPCTTaskExecutionStateQueueing;
     [self.dpcSendingTaskQueue addTransmissionTask:task];
 }
 

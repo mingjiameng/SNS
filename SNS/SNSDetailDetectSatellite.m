@@ -50,6 +50,7 @@
             SNSSatelliteGraphicDataPackage *dataPackage = [[SNSSatelliteGraphicDataPackage alloc] init];
             dataPackage.taskExecution = _taskExecuting;
             [self.dataPackageBufferedQueue addDataPackage:dataPackage];
+            self.bufferedDataSize += dataPackage.size;
             _taskExecuting = nil;
         }
         else {
@@ -70,7 +71,9 @@
 {
     if (_dataPackageBufferedQueue.bufferedFlowSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
         SNSSGDPCTTaskExecution *newTask = [[SNSSGDPCTTaskExecution alloc] init];
-        newTask.dataPackageCollection = [_dataPackageBufferedQueue productDataPackageCollection];
+        SNSSGDataPackgeCollection *newDPC = [[SNSSGDataPackgeCollection alloc] init];
+        newDPC.dataPackageCollection = [_dataPackageBufferedQueue productDataPackageCollection];
+        newTask.dpc = newDPC;
         
         for (SNSSatelliteAntenna *antenna in self.antennas) {
             if (antenna.type == SNSSatelliteAntennaFunctionTypeSendData) {
@@ -85,6 +88,17 @@
     }
     
 }
+
+- (void)antenna:(SNSSatelliteAntenna *)antenna sendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
+{
+    self.bufferedDataSize -= dataPackageCollection.size;
+}
+
+- (BOOL)antenna:(SNSSatelliteAntenna *)antenna requestConnectionForDpct:(SNSSGDPCTTaskExecution *)dpctTaskExecution
+{
+    return [self.flowTransportDelegate schedualDPCTransmission:dpctTaskExecution forSatellite:self];
+}
+
 
 
 - (SNSSGDPBufferedQueue *)dataPackageBufferedQueue

@@ -21,7 +21,7 @@
     }
     else {
         if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateCompleted) {
-            [self.delegate antenna:self sendDataPackageCollection:self.dpcSending.dataPackageCollection];
+            [self.delegate antenna:self sendDataPackageCollection:self.dpcSending.dpc];
             self.dpcSending = [self.dpcSendingTaskQueue pop];
         }
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateRequesting) {
@@ -49,7 +49,7 @@
     }
     else {
         if (self.dpcReceiving.state == SNSSGDPCTTaskExecutionStateCompleted) {
-            [self.delegate antenna:self receiveDataPackageCollection:self.dpcReceiving.dataPackageCollection];
+            [self.delegate antenna:self receiveDataPackageCollection:self.dpcReceiving.dpc];
             self.dpcReceiving = nil;
         }
         else if (self.dpcReceiving.state == SNSSGDPCTTaskExecutionStateConfirming) {
@@ -68,6 +68,16 @@
             [self.dpcReceiving continueReceive];
         }
     }
+}
+
+- (SNSSatelliteTime)timeCostToUndertakenDataTransmissionTask:(SNSSGDPCTTaskExecution *)dataTransmissionTask
+{
+
+}
+
+- (BOOL)schedualDataTransmissionTask:(SNSSGDPCTTaskExecution *)dataTransmissionTask
+{
+    
 }
 
 @end

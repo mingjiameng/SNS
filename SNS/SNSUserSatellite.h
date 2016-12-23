@@ -13,12 +13,10 @@
 @class SNSUserSatellite;
 @class SNSSatelliteGraphicTaskExecution;
 
-@class SNSDataTransmissionTask;
-
 
 @protocol SNSUserSatelliteFlowTransportDelegate <NSObject> // 流量传输代理
 
-- (BOOL)schedualDataTransmission:(nonnull SNSDataTransmissionTask *)dataTransmissionTask forSatellite:(nonnull SNSUserSatellite *)userSatellite;
+- (BOOL)schedualDPCTransmission:(nonnull SNSSGDPCTTaskExecution *)dataTransmissionTask forSatellite:(nonnull SNSUserSatellite *)userSatellite;
 
 @end
 

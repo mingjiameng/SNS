@@ -36,6 +36,7 @@
     [_bufferedDataPackage addObject:dataPackage];
 }
 
+
 - (NSArray<SNSSatelliteGraphicDataPackage *> *)productDataPackageCollection
 {
     NSArray *dpCollection = [NSArray arrayWithArray:_bufferedDataPackage];

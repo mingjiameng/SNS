@@ -28,7 +28,7 @@ typedef struct {
 }SNSSatelliteOrbit;
 
 
-@interface SNSSatellite : NSObject
+@interface SNSSatellite : NSObject <SNSSatelliteAntennaDelegate>
 
 @property (nonatomic) NSUInteger uniqueID;
 @property (nonatomic) SNSSatelliteType type;
@@ -50,9 +50,7 @@ typedef struct {
 // 天线
 @property (nonatomic, strong, nonnull) NSArray<SNSSatelliteAntenna *> *antennas;
 
-
-
-
 - (void)updateState;
+
 
 @end

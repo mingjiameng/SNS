@@ -8,8 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SNSNetworkManageCenter : NSObject
+#import "SNSUserSatellite.h"
+#import "SNSDelaySatellite.h"
 
-+ (instancetype)sharedNetworkManageCenter;
+@interface SNSNetworkManageCenter : NSObject <SNSUserSatelliteFlowTransportDelegate>
+
+@property (nonatomic, weak, nullable) NSArray<SNSDelaySatellite *> *delaySatellites;
+
++ (nonnull instancetype)sharedNetworkManageCenter;
+
+- (BOOL)schedualDPCTransmission:(nonnull SNSSGDPCTTaskExecution *)dataTransmissionTask forSatellite:(nonnull SNSUserSatellite *)userSatellite;
 
 @end

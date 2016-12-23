@@ -22,6 +22,7 @@
     }
     else {
         if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateCompleted) {
+            [self.delegate antenna:self sendDataPackageCollection:self.dpcSending.dpc];
             self.dpcSending = [self.dpcSendingTaskQueue pop];
         }
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateRequesting) {
@@ -33,6 +34,7 @@
                 self.dpcSending.state = SNSSGDPCTTaskExecutionStateQueueing;
             }
         }
+        
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateConnectionFailed) {
             self.dpcSending.state = SNSSGDPCTTaskExecutionStateQueueing;
         }

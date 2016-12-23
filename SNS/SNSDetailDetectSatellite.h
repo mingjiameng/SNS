@@ -8,6 +8,9 @@
 
 #import "SNSUserSatellite.h"
 
-@interface SNSDetailDetectSatellite : SNSUserSatellite
+@interface SNSDetailDetectSatellite : SNSUserSatellite 
+
+@property (nonatomic) SNSResolutionLevel resolution;
+@property (nonatomic) SNSScanWidth scanWidth;
 
 @end

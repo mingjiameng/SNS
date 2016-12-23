@@ -10,6 +10,8 @@
 
 @implementation SNSDelaySatellite
 
+
+
 - (void)updateState
 {
     [super updateState];
@@ -18,5 +20,23 @@
         [antenna continueAction];
     }
 }
+
+- (void)antenna:(SNSSatelliteAntenna *)antenna sendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
+{
+    self.bufferedDataSize -= dataPackageCollection.size;
+}
+
+- (void)antenna:(SNSSatelliteAntenna *)antenna receiveDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
+{
+    self.bufferedDataSize += dataPackageCollection.size;
+    for (SNSSatelliteAntenna *antennaSending in self.antennas) {
+        if (antennaSending.type == SNSSatelliteAntennaFunctionTypeSendData) {
+            SNSSGDPCTTaskExecution *dpctTaskExecution = [[SNSSGDPCTTaskExecution alloc] init];
+            dpctTaskExecution.dpc = dataPackageCollection;
+            [antennaSending addSendingTransmissionTask:dpctTaskExecution];
+        }
+    }
+}
+
 
 @end

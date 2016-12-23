@@ -15,9 +15,11 @@ typedef double SNSSatelliteTime; // 单位:秒
 typedef double SNSMobility; // 单位:秒
 typedef double SNSAngle; // 单位:弧度
 typedef double SNSNetworkFlowSize; // 单位:MB
-typedef double SNSResulotionLevel; // 单位:米
+typedef double SNSResolutionLevel; // 单位:米
 typedef double SNSScanWidth; // 单位:米
 typedef int SNSPriorityLevel;
+typedef int SNSSatelliteTag;
+typedef int  SNSAntennaTag;
 
 #import "SNSCoreCenter.h"
 

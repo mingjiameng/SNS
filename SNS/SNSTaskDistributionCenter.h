@@ -8,8 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SNSTaskDistributionCenter : NSObject
+#import "SNSUserSatellite.h"
 
-+ (instancetype)sharedTaskDistributionCenter;
+@interface SNSTaskDistributionCenter : NSObject <SNSUserSatelliteTaskQueueDataSource>
+
++ (nonnull instancetype)sharedTaskDistributionCenter;
+
+- (nonnull NSArray<SNSSatelliteGraphicTaskExecution *> *)newTaskExecutionQueueForSatellite:(nonnull SNSUserSatellite *)userSatellite;
 
 @end

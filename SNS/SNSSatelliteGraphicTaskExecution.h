@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "SNSSGDetailDetectTask.h"
+#import "SNSSatelliteAction.h"
+
+@class SNSDetailDetectSatellite;
+
 typedef NS_ENUM(NSInteger, SNSSatelliteGraphicTaskExecutionState) {
     SNSSatelliteGraphicTaskExecutionStateQueueing = 1, // 排队中
     SNSSatelliteGraphicTaskExecutionStateAdjusting, // 执行中，卫星调整姿态
@@ -20,6 +25,11 @@ typedef NS_ENUM(NSInteger, SNSSatelliteGraphicTaskExecutionState) {
 @interface SNSSatelliteGraphicTaskExecution : NSObject
 
 @property (nonatomic) SNSSatelliteGraphicTaskExecutionState state;
+@property (nonatomic) SNSNetworkFlowSize dataProduced;
+
+@property (nonatomic, strong, nonnull) SNSSGDetailDetectTask *task;
+@property (nonatomic, weak, nullable) SNSDetailDetectSatellite *executor;
+@property (nonatomic, strong, nonnull) SNSSatelliteAction *imageAction;
 
 - (void)continueAction; // 继续执行任务，为时1秒
 

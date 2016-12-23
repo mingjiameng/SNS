@@ -24,5 +24,6 @@ typedef NS_ENUM(NSInteger, SNSSatelliteActionType) {
 
 @property (nonatomic) SNSSatelliteTime ExpectedStartTime;
 @property (nonatomic) SNSSatelliteTime startTime;
+@property (nonatomic) SNSSatelliteTime endTime;
 
 @end

@@ -14,7 +14,6 @@
 		4413B4731E0A140700DD7600 /* SNSUserSatellite.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4721E0A140700DD7600 /* SNSUserSatellite.m */; };
 		4413B4851E0A1D2800DD7600 /* SNSSatelliteGraphicDataPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4841E0A1D2800DD7600 /* SNSSatelliteGraphicDataPackage.m */; };
 		4413B4881E0A1D7000DD7600 /* SNSSGDPBufferedQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4871E0A1D7000DD7600 /* SNSSGDPBufferedQueue.m */; };
-		4413B48B1E0A1DAB00DD7600 /* SNSSatelliteGraphicTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B48A1E0A1DAB00DD7600 /* SNSSatelliteGraphicTask.m */; };
 		4413B48E1E0A1DB600DD7600 /* SNSSatelliteGraphicTaskExecution.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B48D1E0A1DB600DD7600 /* SNSSatelliteGraphicTaskExecution.m */; };
 		4413B4911E0A1DBD00DD7600 /* SNSSGTaskExecutionQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4901E0A1DBD00DD7600 /* SNSSGTaskExecutionQueue.m */; };
 		4413B4941E0A2B3500DD7600 /* SNSSatelliteAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4931E0A2B3500DD7600 /* SNSSatelliteAction.m */; };
@@ -26,6 +25,12 @@
 		4413B4B01E0B5F0E00DD7600 /* SNSSatelliteAntenna.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4AF1E0B5F0E00DD7600 /* SNSSatelliteAntenna.m */; };
 		4413B4B31E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4B21E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m */; };
 		4413B4B61E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4B51E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m */; };
+		4413B4BA1E0CD93600DD7600 /* SNSSGDataPackgeCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4B91E0CD93600DD7600 /* SNSSGDataPackgeCollection.m */; };
+		4413B4BD1E0D17EE00DD7600 /* SNSSpacePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4BC1E0D17EE00DD7600 /* SNSSpacePoint.m */; };
+		4413B4C01E0D181000DD7600 /* SNSEarthPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4BF1E0D181000DD7600 /* SNSEarthPoint.m */; };
+		4413B4C31E0D187600DD7600 /* SNSMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C21E0D187600DD7600 /* SNSMath.m */; };
+		4413B4C61E0D237700DD7600 /* SNSHotArea.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C51E0D237700DD7600 /* SNSHotArea.m */; };
+		4413B4C91E0D255F00DD7600 /* SNSSGDetailDetectTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C81E0D255F00DD7600 /* SNSSGDetailDetectTask.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,8 +60,6 @@
 		4413B4841E0A1D2800DD7600 /* SNSSatelliteGraphicDataPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSatelliteGraphicDataPackage.m; sourceTree = "<group>"; };
 		4413B4861E0A1D7000DD7600 /* SNSSGDPBufferedQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSGDPBufferedQueue.h; sourceTree = "<group>"; };
 		4413B4871E0A1D7000DD7600 /* SNSSGDPBufferedQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSGDPBufferedQueue.m; sourceTree = "<group>"; };
-		4413B4891E0A1DAB00DD7600 /* SNSSatelliteGraphicTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSatelliteGraphicTask.h; sourceTree = "<group>"; };
-		4413B48A1E0A1DAB00DD7600 /* SNSSatelliteGraphicTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSatelliteGraphicTask.m; sourceTree = "<group>"; };
 		4413B48C1E0A1DB600DD7600 /* SNSSatelliteGraphicTaskExecution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSatelliteGraphicTaskExecution.h; sourceTree = "<group>"; };
 		4413B48D1E0A1DB600DD7600 /* SNSSatelliteGraphicTaskExecution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSatelliteGraphicTaskExecution.m; sourceTree = "<group>"; };
 		4413B48F1E0A1DBD00DD7600 /* SNSSGTaskExecutionQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSGTaskExecutionQueue.h; sourceTree = "<group>"; };
@@ -81,6 +84,18 @@
 		4413B4B21E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSUserSatelliteAntenna.m; sourceTree = "<group>"; };
 		4413B4B41E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSDelaySatelliteAntenna.h; sourceTree = "<group>"; };
 		4413B4B51E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSDelaySatelliteAntenna.m; sourceTree = "<group>"; };
+		4413B4B81E0CD93600DD7600 /* SNSSGDataPackgeCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSGDataPackgeCollection.h; sourceTree = "<group>"; };
+		4413B4B91E0CD93600DD7600 /* SNSSGDataPackgeCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSGDataPackgeCollection.m; sourceTree = "<group>"; };
+		4413B4BB1E0D17EE00DD7600 /* SNSSpacePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSpacePoint.h; sourceTree = "<group>"; };
+		4413B4BC1E0D17EE00DD7600 /* SNSSpacePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSpacePoint.m; sourceTree = "<group>"; };
+		4413B4BE1E0D181000DD7600 /* SNSEarthPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSEarthPoint.h; sourceTree = "<group>"; };
+		4413B4BF1E0D181000DD7600 /* SNSEarthPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSEarthPoint.m; sourceTree = "<group>"; };
+		4413B4C11E0D187600DD7600 /* SNSMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSMath.h; sourceTree = "<group>"; };
+		4413B4C21E0D187600DD7600 /* SNSMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSMath.m; sourceTree = "<group>"; };
+		4413B4C41E0D237700DD7600 /* SNSHotArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSHotArea.h; sourceTree = "<group>"; };
+		4413B4C51E0D237700DD7600 /* SNSHotArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSHotArea.m; sourceTree = "<group>"; };
+		4413B4C71E0D255F00DD7600 /* SNSSGDetailDetectTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSGDetailDetectTask.h; sourceTree = "<group>"; };
+		4413B4C81E0D255F00DD7600 /* SNSSGDetailDetectTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSGDetailDetectTask.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +129,7 @@
 		4413B4521E0A0A9B00DD7600 /* SNS */ = {
 			isa = PBXGroup;
 			children = (
+				4413B4B71E0CC82C00DD7600 /* Geography */,
 				4413B46A1E0A107200DD7600 /* Satellites */,
 				4413B4601E0A0C0F00DD7600 /* NetworkManagementCenter */,
 				4413B45E1E0A0BF800DD7600 /* TaskDistributionCenter */,
@@ -136,14 +152,14 @@
 			children = (
 				4413B4671E0A0C7D00DD7600 /* SNSTaskDistributionCenter.h */,
 				4413B4681E0A0C7D00DD7600 /* SNSTaskDistributionCenter.m */,
-				4413B4891E0A1DAB00DD7600 /* SNSSatelliteGraphicTask.h */,
-				4413B48A1E0A1DAB00DD7600 /* SNSSatelliteGraphicTask.m */,
 				4413B48C1E0A1DB600DD7600 /* SNSSatelliteGraphicTaskExecution.h */,
 				4413B48D1E0A1DB600DD7600 /* SNSSatelliteGraphicTaskExecution.m */,
 				4413B48F1E0A1DBD00DD7600 /* SNSSGTaskExecutionQueue.h */,
 				4413B4901E0A1DBD00DD7600 /* SNSSGTaskExecutionQueue.m */,
 				4413B4921E0A2B3400DD7600 /* SNSSatelliteAction.h */,
 				4413B4931E0A2B3500DD7600 /* SNSSatelliteAction.m */,
+				4413B4C71E0D255F00DD7600 /* SNSSGDetailDetectTask.h */,
+				4413B4C81E0D255F00DD7600 /* SNSSGDetailDetectTask.m */,
 			);
 			name = TaskDistributionCenter;
 			sourceTree = "<group>";
@@ -161,6 +177,8 @@
 				4413B4841E0A1D2800DD7600 /* SNSSatelliteGraphicDataPackage.m */,
 				4413B4861E0A1D7000DD7600 /* SNSSGDPBufferedQueue.h */,
 				4413B4871E0A1D7000DD7600 /* SNSSGDPBufferedQueue.m */,
+				4413B4B81E0CD93600DD7600 /* SNSSGDataPackgeCollection.h */,
+				4413B4B91E0CD93600DD7600 /* SNSSGDataPackgeCollection.m */,
 			);
 			name = NetworkManagementCenter;
 			sourceTree = "<group>";
@@ -195,6 +213,21 @@
 			);
 			name = MAIN;
 			path = SNS;
+			sourceTree = "<group>";
+		};
+		4413B4B71E0CC82C00DD7600 /* Geography */ = {
+			isa = PBXGroup;
+			children = (
+				4413B4BB1E0D17EE00DD7600 /* SNSSpacePoint.h */,
+				4413B4BC1E0D17EE00DD7600 /* SNSSpacePoint.m */,
+				4413B4BE1E0D181000DD7600 /* SNSEarthPoint.h */,
+				4413B4BF1E0D181000DD7600 /* SNSEarthPoint.m */,
+				4413B4C11E0D187600DD7600 /* SNSMath.h */,
+				4413B4C21E0D187600DD7600 /* SNSMath.m */,
+				4413B4C41E0D237700DD7600 /* SNSHotArea.h */,
+				4413B4C51E0D237700DD7600 /* SNSHotArea.m */,
+			);
+			name = Geography;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,18 +293,23 @@
 				4413B4881E0A1D7000DD7600 /* SNSSGDPBufferedQueue.m in Sources */,
 				4413B4691E0A0C7D00DD7600 /* SNSTaskDistributionCenter.m in Sources */,
 				4413B48E1E0A1DB600DD7600 /* SNSSatelliteGraphicTaskExecution.m in Sources */,
+				4413B4BA1E0CD93600DD7600 /* SNSSGDataPackgeCollection.m in Sources */,
+				4413B4BD1E0D17EE00DD7600 /* SNSSpacePoint.m in Sources */,
 				4413B4541E0A0A9B00DD7600 /* main.m in Sources */,
 				4413B4A11E0A693600DD7600 /* SNSSGDPCTTaskExecution.m in Sources */,
 				4413B4AB1E0A803A00DD7600 /* SNSCoreCenter.m in Sources */,
 				4413B4911E0A1DBD00DD7600 /* SNSSGTaskExecutionQueue.m in Sources */,
 				4413B4B31E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m in Sources */,
 				4413B4A41E0A6A1900DD7600 /* SNSSGDPCTTaskExecutionQueue.m in Sources */,
+				4413B4C91E0D255F00DD7600 /* SNSSGDetailDetectTask.m in Sources */,
 				4413B4B01E0B5F0E00DD7600 /* SNSSatelliteAntenna.m in Sources */,
 				4413B4661E0A0C5C00DD7600 /* SNSNetworkManageCenter.m in Sources */,
+				4413B4C61E0D237700DD7600 /* SNSHotArea.m in Sources */,
 				4413B4701E0A109B00DD7600 /* SNSSatellite.m in Sources */,
 				4413B4AD1E0A80AE00DD7600 /* SNSDetailDetectSatellite.m in Sources */,
 				4413B4B61E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m in Sources */,
-				4413B48B1E0A1DAB00DD7600 /* SNSSatelliteGraphicTask.m in Sources */,
+				4413B4C31E0D187600DD7600 /* SNSMath.m in Sources */,
+				4413B4C01E0D181000DD7600 /* SNSEarthPoint.m in Sources */,
 				4413B4941E0A2B3500DD7600 /* SNSSatelliteAction.m in Sources */,
 				4413B49B1E0A5B6A00DD7600 /* SNSDelaySatellite.m in Sources */,
 			);

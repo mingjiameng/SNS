@@ -13,6 +13,7 @@
 
 @class SNSSatellite;
 @class SNSSatelliteAntenna;
+@class SNSSGDataPackgeCollection;
 
 typedef NS_ENUM(NSInteger, SNSSatelliteAntennaFunctionType) {
     SNSSatelliteAntennaFunctionTypeSendData = 1,
@@ -24,9 +25,9 @@ typedef NS_ENUM(NSInteger, SNSSatelliteAntennaFunctionType) {
 
 @protocol SNSSatelliteAntennaDelegate <NSObject>
 
-- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna receiveDataPackageCollection:(nonnull NSArray < SNSSatelliteGraphicDataPackage *> *)dataPackageCollection;
-- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna sendDataPackageCollection:(nonnull NSArray < SNSSatelliteGraphicDataPackage *> *)dataPackageCollection;
-
+@optional
+- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna receiveDataPackageCollection:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
+- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna sendDataPackageCollection:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
 - (BOOL)antenna:(nonnull SNSSatelliteAntenna *)antenna confirmConnectionWithAntenna:(nonnull SNSSatelliteAntenna *)anotherAntenna;
 - (BOOL)antenna:(nonnull SNSSatelliteAntenna *)antenna requestConnectionForDpct:(nonnull SNSSGDPCTTaskExecution *)dpctTaskExecution;
 - (BOOL)antenna:(nonnull SNSSatelliteAntenna *)antenna scheduleConnectionWithAntenna:(nonnull SNSSatelliteAntenna *)anotherAntenna forDpct:(nonnull SNSSGDPCTTaskExecution *)dpctTaskExecution;
@@ -37,7 +38,8 @@ typedef NS_ENUM(NSInteger, SNSSatelliteAntennaFunctionType) {
 
 @interface SNSSatelliteAntenna : NSObject
 
-@property (nonatomic) NSUInteger uniqueID;
+@property (nonatomic) SNSAntennaTag uniqueID;
+@property (nonatomic) SNSNetworkFlowSize bandWidth;
 @property (nonatomic) SNSSatelliteAntennaFunctionType type;
 @property (nonatomic, weak, nullable) SNSSatellite *owner;
 @property (nonatomic, weak, nullable) id<SNSSatelliteAntennaDelegate> delegate;

@@ -10,4 +10,11 @@
 
 @implementation SNSSatelliteGraphicDataPackage
 
+- (void)setTaskExecution:(SNSSatelliteGraphicTaskExecution *)taskExecution
+{
+    _taskExecution = taskExecution;
+    
+    _size = _taskExecution.dataProduced;
+}
+
 @end

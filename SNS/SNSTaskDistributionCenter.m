@@ -8,6 +8,8 @@
 
 #import "SNSTaskDistributionCenter.h"
 
+#import "SNSDetailDetectSatellite.h"
+
 @implementation SNSTaskDistributionCenter
 
 + (instancetype)sharedTaskDistributionCenter
@@ -21,5 +23,27 @@
     
     return taskDistributionCenter;
 }
+
+- (instancetype)init
+{
+    self = [super init];
+    
+    
+    
+    return self;
+}
+
+- (NSArray<SNSSatelliteGraphicTaskExecution *> *)newTaskExecutionQueueForSatellite:(SNSUserSatellite *)userSatellite
+{
+    if (![userSatellite isKindOfClass:[SNSDetailDetectSatellite class]]) {
+        return [[NSArray alloc] init];
+    }
+    
+    
+    // TODO 任务分配算法
+    return [[NSArray alloc] init];
+}
+
+
 
 @end
