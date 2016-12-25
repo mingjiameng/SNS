@@ -30,4 +30,9 @@
     return self;
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<longitude, latitude> <%lf, %lf>", self.longitude, self.latitude];
+}
+
 @end

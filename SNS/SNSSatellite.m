@@ -28,10 +28,22 @@
     return self;
 }
 
+- (void)setOrbit:(SNSSatelliteOrbit)orbit
+{
+    _orbit = orbit;
+    _orbitPeriod = [SNSMath orbitPeriodOfSatelliteOrbit:orbit];
+    _orbitAngleSpeed = 2 * M_PI / _orbitPeriod;
+}
+
+//- (NSString *)description
+//{
+//    SNSSpacePoint *point = [SNSMath spacePointOfSatellite:self];
+//    return [NSString stringWithFormat:@"satellite-%ld buffered data %lf MB at <%lf, %lf, %lf>", self.uniqueID, self.bufferedDataSize, point.x, point.y, point.z];
+//}
+
 - (NSString *)description
 {
-    SNSSpacePoint *point = [SNSMath spacePointWithSatelliteOrbit:self.orbit andCurrentPosition:self.currentTheta];
-    return [NSString stringWithFormat:@"satellite-%ld buffered data %lf MB at <%lf, %lf, %lf>", self.uniqueID, self.bufferedDataSize, point.x, point.y, point.z];
+    return [NSString stringWithFormat:@"satellite-%ld with orbit peroid:%lf", self.uniqueID, self.orbitPeriod];
 }
 
 @end

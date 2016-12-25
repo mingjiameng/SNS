@@ -22,9 +22,10 @@ typedef struct {
     double raan; // 右升交点赤经
     double aop; // 近地点幅角
     double oi; // 轨道倾角
-    double sma; // 长半轴
+    double sma; // 长半轴 千米
     double e; // 离心率
     double ta; // 真近点角
+    bool retrograde; // 是否逆行
 }SNSSatelliteOrbit;
 
 
@@ -37,14 +38,14 @@ typedef struct {
 //@property (nonatomic) SNSNetworkFlowSize bufferSize;
 
 // 以下参数衍生自轨道参数
-@property (nonatomic) SNSAngle angleSpeed;
+@property (nonatomic) SNSRadian orbitRadianSpeed;
 @property (nonatomic) SNSSatelliteTime orbitPeriod;
 //@property (nonatomic, strong, nonnull) SNSSpaceVector *orbitNormalVector;
 
 // 以下参数是卫星的运行时参数
 @property (nonatomic) SNSSatelliteTime satelliteTime; // 卫星运行时间
 //@property (nonatomic, strong, nonnull) SNSSpaceVector *currentSpacePosition; // 当前空间位置
-@property (nonatomic) SNSAngle currentTheta; // 卫星当前在轨道上的位置
+@property (nonatomic) SNSRadian currentTheta; // 卫星当前在轨道上的位置
 @property (nonatomic) SNSNetworkFlowSize bufferedDataSize; // 缓冲区已缓存的数据量
 
 // 天线
