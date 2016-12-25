@@ -26,7 +26,6 @@
             self.dpcSending = [self.dpcSendingTaskQueue pop];
         }
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateRequesting) {
-            // TODO 申请一个网络连接
             if ([self.delegate antenna:self requestConnectionForDpct:self.dpcSending]) {
                 self.dpcSending.state = SNSSGDPCTTaskExecutionStateAdjusting;
             }

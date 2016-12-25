@@ -32,7 +32,7 @@
 {
     _orbit = orbit;
     _orbitPeriod = [SNSMath orbitPeriodOfSatelliteOrbit:orbit];
-    _orbitAngleSpeed = 2 * M_PI / _orbitPeriod;
+    _orbitRadianSpeed = 2 * M_PI / _orbitPeriod;
 }
 
 //- (NSString *)description
@@ -41,9 +41,15 @@
 //    return [NSString stringWithFormat:@"satellite-%ld buffered data %lf MB at <%lf, %lf, %lf>", self.uniqueID, self.bufferedDataSize, point.x, point.y, point.z];
 //}
 
-- (NSString *)description
+//- (NSString *)description
+//{
+//    return [NSString stringWithFormat:@"satellite-%ld with orbit peroid:%lf", self.uniqueID, self.orbitPeriod];
+//}
+
+- (NSString *)spaceBufferedData
 {
-    return [NSString stringWithFormat:@"satellite-%ld with orbit peroid:%lf", self.uniqueID, self.orbitPeriod];
+    SNSSpacePoint *point = [SNSMath spacePointOfSatellite:self atTime:SYSTEM_TIME];
+    return [NSString stringWithFormat:@"%lf %lf %lf %lf", point.x, point.y, point.z, self.bufferedDataSize];
 }
 
 @end

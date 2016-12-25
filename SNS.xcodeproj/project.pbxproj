@@ -31,6 +31,7 @@
 		4413B4C31E0D187600DD7600 /* SNSMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C21E0D187600DD7600 /* SNSMath.m */; };
 		4413B4C61E0D237700DD7600 /* SNSHotArea.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C51E0D237700DD7600 /* SNSHotArea.m */; };
 		4413B4C91E0D255F00DD7600 /* SNSSGDetailDetectTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C81E0D255F00DD7600 /* SNSSGDetailDetectTask.m */; };
+		44B0BFC11E0FE6A800222965 /* SNSPlanedDetailDetectTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B0BFC01E0FE6A800222965 /* SNSPlanedDetailDetectTask.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -96,6 +97,8 @@
 		4413B4C51E0D237700DD7600 /* SNSHotArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSHotArea.m; sourceTree = "<group>"; };
 		4413B4C71E0D255F00DD7600 /* SNSSGDetailDetectTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSGDetailDetectTask.h; sourceTree = "<group>"; };
 		4413B4C81E0D255F00DD7600 /* SNSSGDetailDetectTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSGDetailDetectTask.m; sourceTree = "<group>"; };
+		44B0BFBF1E0FE6A800222965 /* SNSPlanedDetailDetectTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSPlanedDetailDetectTask.h; sourceTree = "<group>"; };
+		44B0BFC01E0FE6A800222965 /* SNSPlanedDetailDetectTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSPlanedDetailDetectTask.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +163,8 @@
 				4413B4931E0A2B3500DD7600 /* SNSSatelliteAction.m */,
 				4413B4C71E0D255F00DD7600 /* SNSSGDetailDetectTask.h */,
 				4413B4C81E0D255F00DD7600 /* SNSSGDetailDetectTask.m */,
+				44B0BFBF1E0FE6A800222965 /* SNSPlanedDetailDetectTask.h */,
+				44B0BFC01E0FE6A800222965 /* SNSPlanedDetailDetectTask.m */,
 			);
 			name = TaskDistributionCenter;
 			sourceTree = "<group>";
@@ -306,6 +311,7 @@
 				4413B4661E0A0C5C00DD7600 /* SNSNetworkManageCenter.m in Sources */,
 				4413B4C61E0D237700DD7600 /* SNSHotArea.m in Sources */,
 				4413B4701E0A109B00DD7600 /* SNSSatellite.m in Sources */,
+				44B0BFC11E0FE6A800222965 /* SNSPlanedDetailDetectTask.m in Sources */,
 				4413B4AD1E0A80AE00DD7600 /* SNSDetailDetectSatellite.m in Sources */,
 				4413B4B61E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m in Sources */,
 				4413B4C31E0D187600DD7600 /* SNSMath.m in Sources */,

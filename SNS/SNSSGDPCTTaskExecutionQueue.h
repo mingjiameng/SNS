@@ -14,5 +14,6 @@
 
 - (nullable SNSSGDPCTTaskExecution *)pop;
 - (void)addTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)task;
+- (SNSSatelliteTime)expectedEndTime;
 
 @end

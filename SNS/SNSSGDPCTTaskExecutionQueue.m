@@ -8,18 +8,44 @@
 
 #import "SNSSGDPCTTaskExecutionQueue.h"
 
+@interface SNSSGDPCTTaskExecutionQueue ()
+
+@property (nonatomic, strong, nonnull) NSMutableArray<SNSSGDPCTTaskExecution *> *dpctArray;
+
+@end
+
+
 @implementation SNSSGDPCTTaskExecutionQueue
+
+- (instancetype)init
+{
+    self = [super init];
+    
+    if (self) {
+        _dpctArray = [[NSMutableArray alloc] init];
+    }
+    
+    return self;
+}
 
 - (SNSSGDPCTTaskExecution *)pop
 {
-    return nil;
+    return [_dpctArray firstObject];
 }
 
 - (void)addTransmissionTask:(SNSSGDPCTTaskExecution *)task
 {
-    
+    [_dpctArray addObject:task];
 }
 
-
+- (SNSSatelliteTime)expectedEndTime
+{
+    SNSSGDPCTTaskExecution *dpct = [_dpctArray lastObject];
+    if (dpct == nil) {
+        return -1;
+    }
+    
+    return dpct.transportAction.ExpectedStartTime + dpct.transportAction.expectedTimeCost;
+}
 
 @end

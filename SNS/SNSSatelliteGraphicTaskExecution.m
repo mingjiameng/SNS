@@ -54,7 +54,7 @@
         double dataInMb = pixels * 3 / 1048576;
         dataInMb += 800.0f; // 800MB的数据量是提前开机和拖后关机共4s产生的数据量
         
-        int ratioDisFactor = [SNSMath randomIntegerBetween:0 and:ceil(self.task.hotArea.areaGraphicCompressionRatioDis * 100)];
+        NSUInteger ratioDisFactor = [SNSMath randomIntegerBetween:0 and:ceil(self.task.hotArea.areaGraphicCompressionRatioDis * 100)];
         double ratioDis = ratioDisFactor / 100;
         double ratio = self.task.hotArea.areaGraphicCompressionRatio;
         if (ratioDisFactor % 2 == 0) {

@@ -99,8 +99,6 @@
     return [self.flowTransportDelegate schedualDPCTransmission:dpctTaskExecution forSatellite:self];
 }
 
-
-
 - (SNSSGDPBufferedQueue *)dataPackageBufferedQueue
 {
     if (!_dataPackageBufferedQueue) {

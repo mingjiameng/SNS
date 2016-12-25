@@ -17,12 +17,12 @@ typedef NS_ENUM(NSInteger, SNSSatelliteActionType) {
 
 @interface SNSSatelliteAction : NSObject
 
-@property (nonatomic) SNSSatelliteActionType *type;
-
-@property (nonatomic) SNSSatelliteTime expectedTimeCost; // 理论上要花费的时间
-@property (nonatomic) SNSSatelliteTime timeUsed; // 已经花费的时间
+@property (nonatomic) SNSSatelliteActionType type;
 
 @property (nonatomic) SNSSatelliteTime ExpectedStartTime;
+@property (nonatomic) SNSSatelliteTime expectedTimeCost; // 理论上要花费的时间
+
+@property (nonatomic) SNSSatelliteTime timeUsed; // 已经花费的时间
 @property (nonatomic) SNSSatelliteTime startTime;
 @property (nonatomic) SNSSatelliteTime endTime;
 

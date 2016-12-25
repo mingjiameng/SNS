@@ -13,7 +13,7 @@
 @interface SNSSGDetailDetectTask : NSObject
 
 @property (nonatomic, strong, nonnull) SNSHotArea *hotArea;
-@property (nonatomic) NSUInteger expectedVisitCount;
+@property (nonatomic) NSUInteger expectedExecutedCount;
 @property (nonatomic) NSUInteger uniqueID;
 
 @end

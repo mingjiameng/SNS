@@ -10,6 +10,7 @@
 
 #import "SNSSatellite.h"
 #import "SNSMath.h"
+#import "SNSCoreCenter.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -38,6 +39,9 @@ int main(int argc, const char * argv[]) {
 //        }
 //        
 //        NSLog(@"max_lati:%lf", max_lati);
+        
+        SNSCoreCenter *center = [[SNSCoreCenter alloc] init];
+        [center fire];
         
     }
     return 0;

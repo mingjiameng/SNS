@@ -16,11 +16,10 @@
 
 @interface SNSMath : NSObject
 
-+ (unsigned int)randomIntegerBetween:(unsigned int)baseFactor and:(unsigned int)modifyFactor;
++ (NSUInteger)randomIntegerBetween:(NSUInteger)baseFactor and:(NSUInteger)modifyFactor;
 
-+ (nonnull SNSSpacePoint *)spacePointOfSatellite:(nonnull SNSSatellite *)satellite;
-
-
+// 卫星空间位置算法
++ (nonnull SNSSpacePoint *)spacePointOfSatellite:(nonnull SNSSatellite *)satellite atTime:(SNSSatelliteTime)time;
 
 // 星下点算法
 + (nonnull SNSEarthPoint *)subSatellitePoint:(nonnull SNSSatellite *)satellite atTime:(SNSSatelliteTime)time;
@@ -35,5 +34,8 @@
 
 // 中继星对业务星下一可见时间段算法
 + (SNSTimeRange)nextVisibleTimeRangeBetweenUserSatellite:(nonnull SNSSatellite *)userSatellite andGeoSatellite:(nonnull SNSDelaySatellite *)geoSatellite fromTime:(SNSSatelliteTime)time;
+
+// 业务星对中继星可见性算法
++ (BOOL)isVisibleBeteenBetweenUserSatellite:(nonnull SNSSatellite *)userSatellite andGeoSatellite:(nonnull SNSDelaySatellite *)geoSatellite fromTime:(SNSSatelliteTime)time;
 
 @end

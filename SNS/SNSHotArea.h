@@ -14,10 +14,10 @@
 @interface SNSHotArea : NSObject
 
 @property (nonatomic, strong, nonnull) SNSEarthPoint *earthPoint;
-@property (nonatomic, readonly) double areaLength;
-@property (nonatomic, readonly) double areaGeoValue;
-@property (nonatomic, readonly) double areaGraphicCompressionRatio;
-@property (nonatomic, readonly) double areaGraphicCompressionRatioDis;
+@property (nonatomic) double areaLength;
+@property (nonatomic) double areaGeoValue;
+@property (nonatomic) double areaGraphicCompressionRatio;
+@property (nonatomic) double areaGraphicCompressionRatioDis;
 
 
 

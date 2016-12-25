@@ -10,10 +10,10 @@
 
 @implementation SNSMath
 
-+ (unsigned int)randomIntegerBetween:(unsigned int)baseFactor and:(unsigned int)modifyFactor
++ (NSUInteger)randomIntegerBetween:(NSUInteger)baseFactor and:(NSUInteger)modifyFactor
 {
     modifyFactor = modifyFactor - baseFactor + 1;
-    int tmpFactor = arc4random() % modifyFactor;
+    NSUInteger tmpFactor = arc4random() % modifyFactor;
     return tmpFactor + modifyFactor;
 }
 
@@ -126,20 +126,30 @@
     SNSEarthPoint *userSubPoint = [self subSatellitePoint:userSatellite atTime:time];
     SNSEarthPoint *geoSubPoint = [self subSatellitePoint:geoSatellite atTime:time];
     
-    SNSRadian longitudeDis = fabs(userSubPoint.longitude - geoSubPoint.longitude) / 180.0f * M_PI;
+    SNSAngle longitudeDis = fabs(userSubPoint.longitude - geoSubPoint.longitude);
     if (!userSatellite.orbit.retrograde) {
-        longitudeDis = 2 * M_PI - longitudeDis;
+        longitudeDis = 360 - longitudeDis;
     }
     
-    SNSRadian subPointLongitudeSpeed = (360 / userSatellite.orbitPeriod - EARTH_AUTO_ROTATION_ANGLE_SPEED) / 180 * M_PI;
-    SNSSatelliteTime td = longitudeDis / subPointLongitudeSpeed + time;
-    SNSSatelliteTime duration = M_PI / subPointLongitudeSpeed;
+    SNSAngle subPointLongitudeSpeed = 360 / userSatellite.orbitPeriod - EARTH_AUTO_ROTATION_ANGLE_SPEED;    SNSSatelliteTime td = longitudeDis / subPointLongitudeSpeed + time;
+    SNSSatelliteTime duration = 180 / subPointLongitudeSpeed;
     
     SNSTimeRange validTimeRange;
     validTimeRange.beginAt = td - duration / 2;
     validTimeRange.length = duration;
     
     return validTimeRange;
+}
+
++ (BOOL)isVisibleBeteenBetweenUserSatellite:(SNSSatellite *)userSatellite andGeoSatellite:(SNSDelaySatellite *)geoSatellite fromTime:(SNSSatelliteTime)time
+{
+    SNSEarthPoint *userSubPoint = [self subSatellitePoint:userSatellite atTime:time];
+    SNSEarthPoint *geoSubPoint = [self subSatellitePoint:geoSatellite atTime:time];
+    
+    SNSAngle longitudeDis = fabs(userSubPoint.longitude - geoSubPoint.longitude);
+    longitudeDis = MIN(360 - longitudeDis, longitudeDis);
+    
+    return longitudeDis < 90;
 }
 
 + (SNSRadian)radianDistanceBetweenEarthPointA:(SNSEarthPoint *)a andB:(SNSEarthPoint *)b
@@ -150,5 +160,21 @@
     return sqrt(x * x + y * y) / 180.0f * M_PI;
 }
 
++ (SNSSpacePoint *)spacePointOfSatellite:(SNSSatellite *)satellite atTime:(SNSSatelliteTime)time
+{
+    SNSRadian theta = [self thetaOfSatellite:satellite AtTime:time];
+    double cosOmega = cos(satellite.orbit.raan);
+    double sinOmega = sin(satellite.orbit.raan);
+    double cosI = cos(satellite.orbit.oi);
+    double sinI = cos(satellite.orbit.oi);
+    double r = satellite.orbit.sma * (1 - satellite.orbit.e * satellite.orbit.e) / (1 + cos(theta));
+    double x = - r * sin(theta);
+    double y = r * cos(theta) + satellite.orbit.sma * satellite.orbit.e;
+    //double z = 0;
+    double X = cosOmega * x + (-cosI * sinOmega) * y + 0;
+    double Y = sinOmega * x + (cosI * cosOmega) * y + 0;
+    double Z = 0 + sinI * y + 0;
 
+    return [[SNSSpacePoint alloc] initWithX:X Y:Y Z:Z];
+}
 @end

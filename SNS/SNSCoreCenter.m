@@ -126,11 +126,12 @@
 
 - (void)readInDelaySatellitesParam
 {
-    FILE *param = fopen("/Users/zkey/Desktop/science/satellite_param/delay_satellite_param.txt", "r");
+    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/delay_satellite_param.txt", "r");
     assert(param != NULL);
     
     int m;
     double raan, aop, oi, sma, e, ta;
+    int retrograde;
     int satellite_id;
     int antenna_num;
     int antenna_id;
@@ -142,7 +143,7 @@
         fscanf(param, "%d", &satellite_id);
         satellite.uniqueID = satellite_id;
         
-        fscanf(param, "%lf %lf %lf %lf %lf %lf", &raan, &aop, &oi, &sma, &e, &ta);
+        fscanf(param, "%lf %lf %lf %lf %lf %lf %d", &raan, &aop, &oi, &sma, &e, &ta, &retrograde);
         SNSSatelliteOrbit orbit;
         orbit.raan = raan;
         orbit.aop = aop;
@@ -150,8 +151,9 @@
         orbit.sma = sma;
         orbit.e = e;
         orbit.ta = ta;
+        orbit.retrograde = retrograde;
         satellite.orbit = orbit;
-        
+    
         fscanf(param, "%d", &antenna_num);
         NSMutableArray *antenna_arr = [NSMutableArray arrayWithCapacity:antenna_num];
         while (antenna_num--) {
@@ -174,7 +176,7 @@
 
 - (void)readInNetworkParam
 {
-    FILE *param = fopen("/Users/zkey/Desktop/science/satellite_param/delay_satellite_param.txt", "r");
+    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/delay_satellite_param.txt", "r");
     assert(param != NULL);
     
     int w;
@@ -195,11 +197,11 @@
     while (_systemTime < EXPECTED_SIMULATION_TIME) {
         if ((NSUInteger)_systemTime % 60 == 0) {
             for (SNSSatellite *satellite in self.detailDetectSatellites) {
-                fprintf(self.satelliteLog, "%s", [satellite.description cStringUsingEncoding:NSUTF8StringEncoding]);
+                fprintf(self.satelliteLog, "%s", [[satellite spaceBufferedData] cStringUsingEncoding:NSUTF8StringEncoding]);
             }
             
             for (SNSSatellite *satellite in self.delaySatellites) {
-                fprintf(self.satelliteLog, "%s", [satellite.description cStringUsingEncoding:NSUTF8StringEncoding]);
+                fprintf(self.satelliteLog, "%s", [[satellite spaceBufferedData] cStringUsingEncoding:NSUTF8StringEncoding]);
             }
         }
         
@@ -221,7 +223,7 @@
 - (FILE *)satelliteLog
 {
     if (_satelliteLog == NULL) {
-        _satelliteLog = fopen("/Users/zkey/Desktop/science/satellite_log_03/buffered_data_log.txt", "w+");
+        _satelliteLog = fopen("/Users/zkey/Desktop/science/sns_output/buffered_data_log.txt", "w+");
         assert(_satelliteLog);
     }
     

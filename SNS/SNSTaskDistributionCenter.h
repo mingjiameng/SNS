@@ -14,6 +14,6 @@
 
 + (nonnull instancetype)sharedTaskDistributionCenter;
 
-- (nonnull NSArray<SNSSatelliteGraphicTaskExecution *> *)newTaskExecutionQueueForSatellite:(nonnull SNSUserSatellite *)userSatellite;
+- (nonnull NSArray<SNSSatelliteGraphicTaskExecution *> *)newTaskExecutionQueueForSatellite:(nonnull SNSDetailDetectSatellite *)userSatellite;
 
 @end

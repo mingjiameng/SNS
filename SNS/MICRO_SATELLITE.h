@@ -14,6 +14,7 @@
 typedef double SNSSatelliteTime; // 单位:秒
 typedef double SNSMobility; // 单位:秒
 typedef double SNSRadian; // 单位:弧度
+typedef double SNSAngle;
 typedef double SNSNetworkFlowSize; // 单位:MB
 typedef double SNSResolutionLevel; // 单位:米
 typedef double SNSScanWidth; // 单位:米
@@ -25,8 +26,6 @@ typedef struct _SNSTimeRange {
     SNSSatelliteTime beginAt;
     SNSSatelliteTime length;
 } SNSTimeRange;
-
-#import "SNSCoreCenter.h"
 
 #define SYSTEM_TIME [[SNSCoreCenter sharedCoreCenter] systemTime]
 

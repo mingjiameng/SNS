@@ -8,6 +8,8 @@
 
 #import "SNSDelaySatellite.h"
 
+#import "SNSMath.h"
+
 @implementation SNSDelaySatellite
 
 
@@ -38,5 +40,22 @@
     }
 }
 
+- (BOOL)antenna:(SNSSatelliteAntenna *)antenna confirmConnectionWithAntenna:(SNSSatelliteAntenna *)anotherAntenna
+{
+    SNSSatelliteTime time = SYSTEM_TIME;
+    
+    return [SNSMath isVisibleBeteenBetweenUserSatellite:antenna.owner andGeoSatellite:(SNSDelaySatellite *)anotherAntenna.owner fromTime:time];
+}
+
+// TODO
+- (BOOL)antenna:(SNSSatelliteAntenna *)antenna scheduleConnectionWithAntenna:(SNSSatelliteAntenna *)anotherAntenna forDpct:(SNSSGDPCTTaskExecution *)dpctTaskExecution
+{
+    SNSSatelliteAction *transportAction = [[SNSSatelliteAction alloc] init];
+    transportAction.ExpectedStartTime = [anotherAntenna.dpcReceivingTaskQueue expectedEndTime] + 2.0f;
+    transportAction.expectedTimeCost = dpctTaskExecution.dpc.size / antenna.bandWidth;
+    [anotherAntenna.dpcReceivingTaskQueue addTransmissionTask:dpctTaskExecution];
+    
+    return TRUE;
+}
 
 @end
