@@ -23,7 +23,7 @@
         self.dpcSending = [self.dpcSendingTaskQueue pop];
         if (self.dpcSending != nil) {
             self.dpcSending.fromAntenna = self;
-            self.dpcSending.toAntenna = self.nextHop;
+            self.dpcSending.toAntenna = self.sideHop;
         }
     }
     else {
@@ -32,8 +32,8 @@
             self.dpcSending = [self.dpcSendingTaskQueue pop];
         }
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateRequesting) {
-            if ([self.delegate antenna:self scheduleConnectionWithAntenna:self.nextHop forDpct:self.dpcSending]) {
-                self.dpcSending.state = SNSSGDPCTTaskExecutionStateTransporting;
+            if ([self.delegate antenna:self scheduleConnectionWithAntenna:self.sideHop forDpct:self.dpcSending]) {
+                self.dpcSending.state = SNSSGDPCTTaskExecutionStateAdjusting;
             }
             else {
                 self.dpcSending.state = SNSSGDPCTTaskExecutionStateQueueing;
@@ -62,6 +62,7 @@
             if ([self.delegate antenna:self confirmConnectionWithAntenna:self.dpcReceiving.fromAntenna]) {
                 // 连接成功，传输
                 self.dpcReceiving.state = SNSSGDPCTTaskExecutionStateTransporting;
+                self.dpcReceiving.transportAction.startTime = SYSTEM_TIME;
             }
             else {
                 // 连接失败，放弃此次传输
@@ -81,12 +82,11 @@
     SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:dataTransmissionTask.fromAntenna.owner andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
     
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
-    expectedEndTime += 300;
-    if (expectedEndTime < visibleTimeRange.beginAt) {
+    if (expectedEndTime + 300 >= visibleTimeRange.beginAt + visibleTimeRange.length) {
         return -1;
     }
-
-    return visibleTimeRange.beginAt - expectedEndTime;
+    
+    return MAX(0, visibleTimeRange.beginAt - expectedEndTime);
 }
 
 - (BOOL)schedualDataTransmissionTask:(SNSSGDPCTTaskExecution *)dataTransmissionTask
@@ -96,13 +96,30 @@
     
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
     expectedEndTime += 300;
-    if (expectedEndTime < visibleTimeRange.beginAt) {
+    if (expectedEndTime > visibleTimeRange.beginAt + visibleTimeRange.length) {
         return NO;
     }
     
     SNSSatelliteAction *transportAction = [[SNSSatelliteAction alloc] init];
-    transportAction.expectedTimeCost = 10;
+    transportAction.expectedTimeCost = dataTransmissionTask.dpc.size / dataTransmissionTask.fromAntenna.bandWidth;
     transportAction.ExpectedStartTime = expectedEndTime;
+    dataTransmissionTask.transportAction = transportAction;
+    dataTransmissionTask.toAntenna = self;
+    [self.dpcReceivingTaskQueue addTransmissionTask:dataTransmissionTask];
+    
+    return YES;
+}
+
+- (BOOL)schedualDataReceiving:(SNSSGDPCTTaskExecution *)dataReceivingTask
+{
+    SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
+    
+    SNSSatelliteAction *transportAction = [[SNSSatelliteAction alloc] init];
+    transportAction.ExpectedStartTime = expectedEndTime + 5;
+    transportAction.expectedTimeCost = dataReceivingTask.dpc.size / dataReceivingTask.fromAntenna.bandWidth;
+    dataReceivingTask.transportAction = transportAction;
+    
+    [self.dpcReceivingTaskQueue addTransmissionTask:dataReceivingTask];
     
     return YES;
 }

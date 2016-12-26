@@ -29,7 +29,7 @@ typedef struct _SNSTimeRange {
 
 #define SYSTEM_TIME [[SNSCoreCenter sharedCoreCenter] systemTime]
 
-#define MINIMUM_DATA_PACKAGE_COLLECTION_SIZE 7000
+#define MINIMUM_DATA_PACKAGE_COLLECTION_SIZE 3000
 
 #define EARTH_AUTO_ROTATION_ANGLE_SPEED 4.167e-3 // 自转角速度 单位：角度
 

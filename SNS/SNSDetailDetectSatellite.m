@@ -27,7 +27,8 @@
 
 @property (nonatomic, strong, nullable) SNSSatelliteGraphicTaskExecution *taskExecuting; // 正在执行中的成像任务
 
-
+@property (nonatomic) FILE *taskExecutionLog;
+@property (nonatomic) FILE *dataSendingLog;
 
 @end
 
@@ -49,8 +50,9 @@
         if (_taskExecuting.state == SNSSatelliteGraphicTaskExecutionStateCompleted) {
             SNSSatelliteGraphicDataPackage *dataPackage = [[SNSSatelliteGraphicDataPackage alloc] init];
             dataPackage.taskExecution = _taskExecuting;
-            [self.dataPackageBufferedQueue addDataPackage:dataPackage];
+            [_dataPackageBufferedQueue addDataPackage:dataPackage];
             self.bufferedDataSize += dataPackage.size;
+            [self recordTaskExecution:_taskExecuting];
             _taskExecuting = nil;
         }
         else {
@@ -92,6 +94,7 @@
 - (void)antenna:(SNSSatelliteAntenna *)antenna sendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
     self.bufferedDataSize -= dataPackageCollection.size;
+    [self recordSendingData:dataPackageCollection];
 }
 
 - (BOOL)antenna:(SNSSatelliteAntenna *)antenna requestConnectionForDpct:(SNSSGDPCTTaskExecution *)dpctTaskExecution
@@ -108,6 +111,53 @@
     return _dataPackageBufferedQueue;
 }
 
+- (void)recordTaskExecution:(SNSSatelliteGraphicTaskExecution *)taskExecuted
+{
+    NSString *log = [NSString stringWithFormat:@"satellite-%ld execute task-%ld and produced %lf MB data at time %lf", self.uniqueID, taskExecuted.task.uniqueID, taskExecuted.dataProduced, SYSTEM_TIME];
+    fprintf(self.taskExecutionLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
+}
 
+- (void)recordSendingData:(SNSSGDataPackgeCollection *)dataPackageCollection
+{
+    NSString *log = [NSString stringWithFormat:@"satellite-%ld send %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
+    fprintf(self.dataSendingLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
+}
+
+- (FILE *)taskExecutionLog
+{
+    if (_taskExecutionLog == NULL) {
+        NSString *taskExecutionLogFilePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03ld_task_execution_log.txt", self.uniqueID];
+        _taskExecutionLog = fopen([taskExecutionLogFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+        assert(_taskExecutionLog != NULL);
+    }
+    
+    return _taskExecutionLog;
+}
+
+- (FILE *)dataSendingLog
+{
+    if (_dataSendingLog == NULL) {
+        NSString *dataSendingLogFilePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03ld_data_sending_log.txt", self.uniqueID];
+        _dataSendingLog = fopen([dataSendingLogFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+        assert(_dataSendingLog != NULL);
+    }
+    
+    return _dataSendingLog;
+}
+
+- (SNSSGTaskExecutionQueue *)taskExecutionQueue
+{
+    if (_taskExecutionQueue == nil) {
+        _taskExecutionQueue = [[SNSSGTaskExecutionQueue alloc] init];
+    }
+    
+    return _taskExecutionQueue;
+}
+
+- (void)dealloc
+{
+    fclose(self.taskExecutionLog);
+    fclose(self.dataSendingLog);
+}
 
 @end

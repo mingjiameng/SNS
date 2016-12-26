@@ -31,6 +31,12 @@
     SNSDelaySatelliteAntenna *theAntenna = nil;
     for (SNSDelaySatellite *delaySatellite in self.delaySatellites) {
         for (SNSDelaySatelliteAntenna *antenna in delaySatellite.antennas) {
+            
+            // 天线的功能应该是接受数据，且没有固定的邻接点
+            if (antenna.type != SNSSatelliteAntennaFunctionTypeReceiveData || antenna.sideHop != nil) {
+                continue;
+            }
+            
             timeCost = [antenna timeCostToUndertakenDataTransmissionTask:dataTransmissionTask];
             if (timeCost < 0) {
                 continue;

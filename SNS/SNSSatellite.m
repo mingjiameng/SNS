@@ -10,6 +10,14 @@
 
 #import "SNSMath.h"
 
+@interface SNSSatellite ()
+
+@property (nonatomic) FILE *satelliteLog;
+
+@end
+
+
+
 @implementation SNSSatellite
 
 - (void)updateState
@@ -22,7 +30,7 @@
     self = [super init];
     
     if (self) {
-        self.bufferedDataSize = 0;
+        _bufferedDataSize = 0;
     }
     
     return self;
@@ -35,6 +43,8 @@
     _orbitRadianSpeed = 2 * M_PI / _orbitPeriod;
 }
 
+
+
 //- (NSString *)description
 //{
 //    SNSSpacePoint *point = [SNSMath spacePointOfSatellite:self];
@@ -46,10 +56,11 @@
 //    return [NSString stringWithFormat:@"satellite-%ld with orbit peroid:%lf", self.uniqueID, self.orbitPeriod];
 //}
 
-- (NSString *)spaceBufferedData
+- (NSString *)spaceBufferedDataDescription
 {
     SNSSpacePoint *point = [SNSMath spacePointOfSatellite:self atTime:SYSTEM_TIME];
-    return [NSString stringWithFormat:@"%lf %lf %lf %lf", point.x, point.y, point.z, self.bufferedDataSize];
+    return [NSString stringWithFormat:@"satellite-%ld buffered %lf MB data at position <%lf, %lf, %lf>", self.uniqueID, self.bufferedDataSize, point.x, point.y, point.z];
 }
+
 
 @end

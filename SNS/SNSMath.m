@@ -141,7 +141,7 @@
     return validTimeRange;
 }
 
-+ (BOOL)isVisibleBeteenBetweenUserSatellite:(SNSSatellite *)userSatellite andGeoSatellite:(SNSDelaySatellite *)geoSatellite fromTime:(SNSSatelliteTime)time
++ (BOOL)isVisibleBeteenBetweenUserSatellite:(SNSUserSatellite *)userSatellite andGeoSatellite:(SNSDelaySatellite *)geoSatellite fromTime:(SNSSatelliteTime)time
 {
     SNSEarthPoint *userSubPoint = [self subSatellitePoint:userSatellite atTime:time];
     SNSEarthPoint *geoSubPoint = [self subSatellitePoint:geoSatellite atTime:time];

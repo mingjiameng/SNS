@@ -52,6 +52,6 @@ typedef struct {
 @property (nonatomic, strong, nonnull) NSArray<SNSSatelliteAntenna *> *antennas;
 
 - (void)updateState;
-- (nonnull NSString *)spaceBufferedData;
+- (nonnull NSString *)spaceBufferedDataDescription;
 
 @end

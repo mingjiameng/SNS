@@ -45,7 +45,7 @@
 
 - (void)readInTaskFile
 {
-    FILE *task_input_txt = fopen("/Users/zkey/Desktop/science/sns_input.txt", "r");
+    FILE *task_input_txt = fopen("/Users/zkey/Desktop/science/sns_task_source.txt", "r");
     assert(task_input_txt != NULL);
     
     _taskList = [NSMutableArray arrayWithCapacity:8000];
@@ -206,7 +206,7 @@
         last_schedualed_task_execution = new_task_execution;
     }
     
-    self.taskToAllocate -= tmp_task_list.count;
+    self.taskToAllocate -= valid_task_list.count;
     
     return valid_task_list;
 }

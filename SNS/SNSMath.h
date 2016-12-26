@@ -13,6 +13,7 @@
 #import "SNSDelaySatellite.h"
 #import "SNSEarthPoint.h"
 #import "SNSHotArea.h"
+#import "SNSUserSatellite.h"
 
 @interface SNSMath : NSObject
 
@@ -36,6 +37,6 @@
 + (SNSTimeRange)nextVisibleTimeRangeBetweenUserSatellite:(nonnull SNSSatellite *)userSatellite andGeoSatellite:(nonnull SNSDelaySatellite *)geoSatellite fromTime:(SNSSatelliteTime)time;
 
 // 业务星对中继星可见性算法
-+ (BOOL)isVisibleBeteenBetweenUserSatellite:(nonnull SNSSatellite *)userSatellite andGeoSatellite:(nonnull SNSDelaySatellite *)geoSatellite fromTime:(SNSSatelliteTime)time;
++ (BOOL)isVisibleBeteenBetweenUserSatellite:(nonnull SNSUserSatellite *)userSatellite andGeoSatellite:(nonnull SNSDelaySatellite *)geoSatellite fromTime:(SNSSatelliteTime)time;
 
 @end

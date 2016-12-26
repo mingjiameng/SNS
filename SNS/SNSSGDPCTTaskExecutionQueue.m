@@ -30,7 +30,13 @@
 
 - (SNSSGDPCTTaskExecution *)pop
 {
-    return [_dpctArray firstObject];
+    SNSSGDPCTTaskExecution *task = [_dpctArray firstObject];
+    
+    if (task != nil) {
+        [_dpctArray removeObjectAtIndex:0];
+    }
+    
+    return task;
 }
 
 - (void)addTransmissionTask:(SNSSGDPCTTaskExecution *)task
@@ -42,7 +48,7 @@
 {
     SNSSGDPCTTaskExecution *dpct = [_dpctArray lastObject];
     if (dpct == nil) {
-        return -1;
+        return SYSTEM_TIME;
     }
     
     return dpct.transportAction.ExpectedStartTime + dpct.transportAction.expectedTimeCost;

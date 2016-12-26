@@ -28,7 +28,8 @@
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSDelaySatellite *> *delaySatellites;
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSSatelliteAntenna *> *antennas;
 
-@property (nonatomic) FILE *satelliteLog;
+@property (nonatomic) FILE *detailDetectSatelliteLog;
+@property (nonatomic) FILE *delaySatelliteLog;
 
 @end
 
@@ -74,6 +75,7 @@
     
     int n;
     double raan, aop, oi, sma, e, ta;
+    int retrograde;
     double scan_width, resolution;
     int satellite_id;
     int antenna_num;
@@ -86,7 +88,7 @@
         fscanf(param, "%d", &satellite_id);
         satellite.uniqueID = satellite_id;
         
-        fscanf(param, "%lf %lf %lf %lf %lf %lf", &raan, &aop, &oi, &sma, &e, &ta);
+        fscanf(param, "%lf %lf %lf %lf %lf %lf %d", &raan, &aop, &oi, &sma, &e, &ta, &retrograde);
         SNSSatelliteOrbit orbit;
         orbit.raan = raan;
         orbit.aop = aop;
@@ -95,7 +97,7 @@
         orbit.e = e;
         orbit.ta = ta;
         satellite.orbit = orbit;
-        
+        orbit.retrograde = retrograde;
         fscanf(param, "%lf %lf", &resolution, &scan_width);
         satellite.resolution = resolution;
         satellite.scanWidth = scan_width;
@@ -131,7 +133,6 @@
     
     int m;
     double raan, aop, oi, sma, e, ta;
-    int retrograde;
     int satellite_id;
     int antenna_num;
     int antenna_id;
@@ -143,7 +144,7 @@
         fscanf(param, "%d", &satellite_id);
         satellite.uniqueID = satellite_id;
         
-        fscanf(param, "%lf %lf %lf %lf %lf %lf %d", &raan, &aop, &oi, &sma, &e, &ta, &retrograde);
+        fscanf(param, "%lf %lf %lf %lf %lf %lf", &raan, &aop, &oi, &sma, &e, &ta);
         SNSSatelliteOrbit orbit;
         orbit.raan = raan;
         orbit.aop = aop;
@@ -151,7 +152,7 @@
         orbit.sma = sma;
         orbit.e = e;
         orbit.ta = ta;
-        orbit.retrograde = retrograde;
+        orbit.retrograde = false;
         satellite.orbit = orbit;
     
         fscanf(param, "%d", &antenna_num);
@@ -176,18 +177,30 @@
 
 - (void)readInNetworkParam
 {
-    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/delay_satellite_param.txt", "r");
+    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/network_topology_param.txt", "r");
     assert(param != NULL);
     
     int w;
-    fscanf(param, "r");
+    fscanf(param, "%d", &w);
     int p, q; // 由p 到 q的边
     while (w--) {
         fscanf(param, "%d %d", &p, &q);
-        SNSDelaySatelliteAntenna *antennaP = (SNSDelaySatelliteAntenna *)[_antennas objectAtIndex:p];
-        SNSDelaySatelliteAntenna *antennaQ = (SNSDelaySatelliteAntenna *)[_antennas objectAtIndex:q];
-        antennaP.nextHop = antennaQ;
+        SNSDelaySatelliteAntenna *antennaP = (SNSDelaySatelliteAntenna *)[self antennaWithID:p];
+        SNSDelaySatelliteAntenna *antennaQ = (SNSDelaySatelliteAntenna *)[self antennaWithID:q];
+        antennaP.sideHop = antennaQ;
+        antennaQ.sideHop = antennaP;
     }
+}
+
+- (SNSSatelliteAntenna *)antennaWithID:(SNSAntennaTag)uniqueID
+{
+    for (SNSSatelliteAntenna *antenna in self.antennas) {
+        if (antenna.uniqueID == uniqueID) {
+            return antenna;
+        }
+    }
+    
+    return nil;
 }
 
 - (void)fire
@@ -197,11 +210,11 @@
     while (_systemTime < EXPECTED_SIMULATION_TIME) {
         if ((NSUInteger)_systemTime % 60 == 0) {
             for (SNSSatellite *satellite in self.detailDetectSatellites) {
-                fprintf(self.satelliteLog, "%s", [[satellite spaceBufferedData] cStringUsingEncoding:NSUTF8StringEncoding]);
+                fprintf(self.detailDetectSatelliteLog, "%s\n", [[satellite spaceBufferedDataDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
             }
             
             for (SNSSatellite *satellite in self.delaySatellites) {
-                fprintf(self.satelliteLog, "%s", [[satellite spaceBufferedData] cStringUsingEncoding:NSUTF8StringEncoding]);
+                fprintf(self.delaySatelliteLog, "%s\n", [[satellite spaceBufferedDataDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
             }
         }
         
@@ -217,17 +230,28 @@
         });
     }
     
-    fclose(self.satelliteLog);
+    fclose(self.detailDetectSatelliteLog);
+    fclose(self.delaySatelliteLog);
 }
 
-- (FILE *)satelliteLog
+- (FILE *)detailDetectSatelliteLog
 {
-    if (_satelliteLog == NULL) {
-        _satelliteLog = fopen("/Users/zkey/Desktop/science/sns_output/buffered_data_log.txt", "w+");
-        assert(_satelliteLog);
+    if (_detailDetectSatelliteLog == NULL) {
+        _detailDetectSatelliteLog = fopen("/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_buffered_data_log.txt", "w+");
+        assert(_detailDetectSatelliteLog != NULL);
     }
     
-    return _satelliteLog;
+    return _detailDetectSatelliteLog;
+}
+
+- (FILE *)delaySatelliteLog
+{
+    if (_delaySatelliteLog == NULL) {
+        _delaySatelliteLog = fopen("/Users/zkey/Desktop/science/sns_output/delay_satellite_buffered_data_log.txt", "w+");
+        assert(_delaySatelliteLog != NULL);
+    }
+    
+    return _delaySatelliteLog;
 }
 
 

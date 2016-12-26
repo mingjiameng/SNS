@@ -33,7 +33,6 @@
                 self.dpcSending.state = SNSSGDPCTTaskExecutionStateQueueing;
             }
         }
-        
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateConnectionFailed) {
             self.dpcSending.state = SNSSGDPCTTaskExecutionStateQueueing;
         }
