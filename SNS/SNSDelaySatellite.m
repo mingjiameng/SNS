@@ -26,6 +26,8 @@
 {
     [super updateState];
     
+    //NSLog(@"satellite-%ld buffered data %lf MB", self.uniqueID, self.bufferedDataSize);
+    
     for (SNSSatelliteAntenna *antenna in self.antennas) {
         [antenna continueAction];
     }
@@ -113,6 +115,12 @@
     }
     
     return _dataSendLog;
+}
+
+- (void)stop
+{
+    fclose(self.dataSendLog);
+    fclose(self.dataReceiveLog);
 }
 
 @end

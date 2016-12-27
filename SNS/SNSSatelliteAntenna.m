@@ -16,6 +16,18 @@
 
 @implementation SNSSatelliteAntenna
 
+- (instancetype)init
+{
+    self = [super init];
+    
+    if (self) {
+        _dpcSendingTaskQueue = [[SNSSGDPCTTaskExecutionQueue alloc] init];
+        _dpcReceivingTaskQueue = [[SNSSGDPCTTaskExecutionQueue alloc] init];
+    }
+    
+    return self;
+}
+
 - (void)addSendingTransmissionTask:(SNSSGDPCTTaskExecution *)task
 {
     task.fromAntenna = self;
@@ -27,6 +39,7 @@
 {
     if (_type == SNSSatelliteAntennaFunctionTypeSendData) {
         [self sendDataBehavior];
+        //NSLog(@"continue sending data action");
     }
     else if (_type == SNSSatelliteAntennaFunctionTypeReceiveData) {
         [self receiveDataBehavior];
@@ -44,7 +57,7 @@
 
 - (void)sendDataBehavior
 {
-    
+    //NSLog(@"go into sending data behavior");
 }
 
 @end

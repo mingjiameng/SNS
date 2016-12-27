@@ -22,7 +22,7 @@
 
 + (instancetype)sharedTaskDistributionCenter
 {
-    dispatch_once_t onceToken;
+    static dispatch_once_t onceToken;
     static SNSTaskDistributionCenter *taskDistributionCenter = nil;
     
     dispatch_once(&onceToken, ^{
@@ -45,7 +45,7 @@
 
 - (void)readInTaskFile
 {
-    FILE *task_input_txt = fopen("/Users/zkey/Desktop/science/sns_task_source.txt", "r");
+    FILE *task_input_txt = fopen("/Users/zkey/Desktop/science/sns_input/sns_task_source.txt", "r");
     assert(task_input_txt != NULL);
     
     _taskList = [NSMutableArray arrayWithCapacity:8000];
@@ -66,6 +66,9 @@
         hotArea.areaLength = area_length;
         hotArea.areaGeoValue = value;
         hotArea.areaGraphicCompressionRatio = compression_ratio;
+        if (compression_ratio < 1) {
+            NSLog(@"unormal ratio %lf with geo value %d", compression_ratio, value);
+        }
         hotArea.areaGraphicCompressionRatioDis = compression_ratio_dis;
         SNSSGDetailDetectTask *task = [[SNSSGDetailDetectTask alloc] init];
         task.uniqueID = ++task_unique_id;
@@ -112,8 +115,8 @@
             task_index = [SNSMath randomIntegerBetween:0 and:(_taskList.count - 1)];
             the_task = [self.taskList objectAtIndex:task_index];
             is_duplicate_task = NO;
-            for (SNSSGDetailDetectTask *task in tmp_task_list) {
-                if (task.uniqueID == the_task.uniqueID) {
+            for (SNSPlanedDetailDetectTask *planedTask in tmp_task_list) {
+                if (planedTask.task.uniqueID == the_task.uniqueID) {
                     is_duplicate_task = YES;
                     break;
                 }
@@ -129,11 +132,11 @@
         }
         // 用线性查找valid_task
         if (!is_valide_task) {
-            for (task_index = 0; task_index < self.taskList.count; ++task_index) {
+            for (task_index = 0; task_index < _taskList.count; ++task_index) {
                 the_task = [self.taskList objectAtIndex:task_index];
                 is_duplicate_task = NO;
-                for (SNSSGDetailDetectTask *task in tmp_task_list) {
-                    if (task.uniqueID == the_task.uniqueID) {
+                for (SNSPlanedDetailDetectTask *planedTask in tmp_task_list) {
+                    if (planedTask.task.uniqueID == the_task.uniqueID) {
                         is_duplicate_task = YES;
                         break;
                     }
@@ -205,6 +208,10 @@
         [valid_task_list addObject:new_task_execution];
         last_schedualed_task_execution = new_task_execution;
     }
+    
+#ifdef DEBUG
+    //NSLog(@"allocate %ld tasks", valid_task_list.count);
+#endif
     
     self.taskToAllocate -= valid_task_list.count;
     

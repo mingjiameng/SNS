@@ -15,7 +15,7 @@
 #import "SNSDelaySatellite.h"
 #import "SNSUserSatelliteAntenna.h"
 #import "SNSDelaySatelliteAntenna.h"
-
+//#import "SNSGroundStation.h"
 
 @interface SNSCoreCenter ()
 
@@ -27,6 +27,7 @@
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSDetailDetectSatellite *> *detailDetectSatellites;
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSDelaySatellite *> *delaySatellites;
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSSatelliteAntenna *> *antennas;
+//@property (nonatomic, strong, nonnull) NSMutableArray<SNSGroundStation *> *groundStations;
 
 @property (nonatomic) FILE *detailDetectSatelliteLog;
 @property (nonatomic) FILE *delaySatelliteLog;
@@ -38,7 +39,7 @@
 
 + (instancetype)sharedCoreCenter
 {
-    dispatch_once_t onceToken;
+    static dispatch_once_t onceToken;
     static SNSCoreCenter *coreCenter = nil;
     
     dispatch_once(&onceToken, ^{
@@ -59,18 +60,20 @@
         _detailDetectSatellites = [[NSMutableArray alloc] init];
         _delaySatellites = [[NSMutableArray alloc] init];
         _antennas = [[NSMutableArray alloc] init];
+        //_groundStations = [[NSMutableArray alloc] init];
         
-        [self readInUserSatellites];
+        [self readInUserSatellitesParam];
         [self readInDelaySatellitesParam];
+        _networkManageCenter.delaySatellites = _delaySatellites;
         [self readInNetworkParam];
     }
     
     return self;
 }
 
-- (void)readInUserSatellites
+- (void)readInUserSatellitesParam
 {
-    FILE *param = fopen("/Users/zkey/Desktop/science/satellite_param/user_satellite_param.txt", "r");
+    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/user_satellite_param.txt", "r");
     assert(param != NULL);
     
     int n;
@@ -135,7 +138,7 @@
     double raan, aop, oi, sma, e, ta;
     int satellite_id;
     int antenna_num;
-    int antenna_id;
+    int antenna_id, antenna_type;
     double antenna_bandWidth;
     
     fscanf(param, "%d", &m);
@@ -158,9 +161,10 @@
         fscanf(param, "%d", &antenna_num);
         NSMutableArray *antenna_arr = [NSMutableArray arrayWithCapacity:antenna_num];
         while (antenna_num--) {
-            fscanf(param, "%d %lf", &antenna_id, &antenna_bandWidth);
+            fscanf(param, "%d %d %lf", &antenna_id, &antenna_type, &antenna_bandWidth);
             SNSDelaySatelliteAntenna *antenna = [[SNSDelaySatelliteAntenna alloc] init];
             antenna.uniqueID = antenna_id;
+            antenna.type = antenna_type;
             antenna.bandWidth = antenna_bandWidth;
             antenna.owner = satellite;
             antenna.delegate = satellite;
@@ -192,6 +196,35 @@
     }
 }
 
+//- (void)readInGroundStationParam
+//{
+//    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/ground_station_param.txt", "r");
+//    assert(param != NULL);
+//    
+//    int n, antenna_type;
+//    int station_unique_id, antenna_unique_id;
+//    double antenna_band_width;
+//    fscanf(param, "%d", &n);
+//    while (n--) {
+//        fscanf(param, "%d", &station_unique_id);
+//        SNSGroundStation *station = [[SNSGroundStation alloc] init];
+//        station.uniqueID = station_unique_id;
+//        
+//        fscanf(param, "%d %d %lf", &antenna_unique_id, &antenna_type, &antenna_band_width);
+//        SNSDelaySatelliteAntenna *antenna = [[SNSDelaySatelliteAntenna alloc] init];
+//        antenna.uniqueID = antenna_unique_id;
+//        antenna.type = antenna_type;
+//        antenna.bandWidth = antenna_band_width;
+//        antenna.delegate = station;
+//        [_antennas addObject:antenna];
+//        
+//        station.antenna = antenna;
+//        [_groundStations addObject:station];
+//    }
+//    
+//    fclose(param);
+//}
+
 - (SNSSatelliteAntenna *)antennaWithID:(SNSAntennaTag)uniqueID
 {
     for (SNSSatelliteAntenna *antenna in self.antennas) {
@@ -216,6 +249,10 @@
             for (SNSSatellite *satellite in self.delaySatellites) {
                 fprintf(self.delaySatelliteLog, "%s\n", [[satellite spaceBufferedDataDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
             }
+            
+#ifdef DEBUG
+            NSLog(@"record space network flow at %lf", _systemTime);
+#endif
         }
         
         _systemTime += SIMULATION_TIME_STEP;
@@ -228,6 +265,14 @@
                 [satellite updateState];
             }
         });
+    }
+    
+    for (SNSSatellite *satellite in self.detailDetectSatellites) {
+        [satellite stop];
+    }
+    
+    for (SNSSatellite *satellite in self.delaySatellites) {
+        [satellite stop];
     }
     
     fclose(self.detailDetectSatelliteLog);

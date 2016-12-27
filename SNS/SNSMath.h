@@ -17,7 +17,7 @@
 
 @interface SNSMath : NSObject
 
-+ (NSUInteger)randomIntegerBetween:(NSUInteger)baseFactor and:(NSUInteger)modifyFactor;
++ (NSUInteger)randomIntegerBetween:(NSUInteger)a and:(NSUInteger)b;
 
 // 卫星空间位置算法
 + (nonnull SNSSpacePoint *)spacePointOfSatellite:(nonnull SNSSatellite *)satellite atTime:(SNSSatelliteTime)time;

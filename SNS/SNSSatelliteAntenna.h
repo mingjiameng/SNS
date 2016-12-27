@@ -47,8 +47,8 @@ typedef NS_ENUM(NSInteger, SNSSatelliteAntennaFunctionType) {
 @property (nonatomic, strong, nonnull) SNSSGDPCTTaskExecutionQueue *dpcSendingTaskQueue;
 @property (nonatomic, strong, nonnull) SNSSGDPCTTaskExecution *dpcSending;
 
-@property (nonatomic, weak, nullable) SNSSGDPCTTaskExecutionQueue *dpcReceivingTaskQueue;
-@property (nonatomic, weak, nullable) SNSSGDPCTTaskExecution *dpcReceiving;
+@property (nonatomic, strong, nullable) SNSSGDPCTTaskExecutionQueue *dpcReceivingTaskQueue;
+@property (nonatomic, strong, nullable) SNSSGDPCTTaskExecution *dpcReceiving;
 
 // automatically behave
 - (void)continueAction;

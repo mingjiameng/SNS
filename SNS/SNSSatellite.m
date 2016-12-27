@@ -22,7 +22,11 @@
 
 - (void)updateState
 {
-    //NSLog(@"satellite-%ld update state ", self.uniqueID);
+//    //NSLog(@"satellite-%ld update state ", self.uniqueID);
+//    NSLog(@"satellite-%ld buffered %lf MB data", self.uniqueID, self.bufferedDataSize);
+//    if (self.bufferedDataSize < 0) {
+//        NSLog(@"satellite-%ld buffered unormal data size %lf", self.uniqueID, self.bufferedDataSize);
+//    }
 }
 
 - (instancetype)init
@@ -56,10 +60,17 @@
 //    return [NSString stringWithFormat:@"satellite-%ld with orbit peroid:%lf", self.uniqueID, self.orbitPeriod];
 //}
 
+- (void)stop
+{
+    
+}
+
 - (NSString *)spaceBufferedDataDescription
 {
     SNSSpacePoint *point = [SNSMath spacePointOfSatellite:self atTime:SYSTEM_TIME];
-    return [NSString stringWithFormat:@"satellite-%ld buffered %lf MB data at position <%lf, %lf, %lf>", self.uniqueID, self.bufferedDataSize, point.x, point.y, point.z];
+    NSString *log = [NSString stringWithFormat:@"satellite-%ld buffered %lf MB data at position <%lf, %lf, %lf>", self.uniqueID, self.bufferedDataSize, point.x, point.y, point.z];
+    //NSLog(@"%@", log);
+    return log;
 }
 
 

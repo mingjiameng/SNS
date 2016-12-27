@@ -10,11 +10,11 @@
 
 @implementation SNSMath
 
-+ (NSUInteger)randomIntegerBetween:(NSUInteger)baseFactor and:(NSUInteger)modifyFactor
++ (NSUInteger)randomIntegerBetween:(NSUInteger)a and:(NSUInteger)b
 {
-    modifyFactor = modifyFactor - baseFactor + 1;
-    NSUInteger tmpFactor = arc4random() % modifyFactor;
-    return tmpFactor + modifyFactor;
+    NSUInteger modifyFactor = b - a + 1;
+    NSUInteger tmp = arc4random() % modifyFactor;
+    return a + tmp;
 }
 
 + (SNSEarthPoint *)subSatellitePoint:(SNSSatellite *)satellite atTime:(SNSSatelliteTime)time
@@ -137,6 +137,8 @@
     SNSTimeRange validTimeRange;
     validTimeRange.beginAt = td - duration / 2;
     validTimeRange.length = duration;
+    
+    //NSLog(@"visible time range begin at:%lf length:%lf", validTimeRange.beginAt, validTimeRange.length);
     
     return validTimeRange;
 }

@@ -53,5 +53,6 @@ typedef struct {
 
 - (void)updateState;
 - (nonnull NSString *)spaceBufferedDataDescription;
+- (void)stop;
 
 @end

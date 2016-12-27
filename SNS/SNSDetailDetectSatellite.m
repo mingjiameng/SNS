@@ -50,7 +50,7 @@
         if (_taskExecuting.state == SNSSatelliteGraphicTaskExecutionStateCompleted) {
             SNSSatelliteGraphicDataPackage *dataPackage = [[SNSSatelliteGraphicDataPackage alloc] init];
             dataPackage.taskExecution = _taskExecuting;
-            [_dataPackageBufferedQueue addDataPackage:dataPackage];
+            [self.dataPackageBufferedQueue addDataPackage:dataPackage];
             self.bufferedDataSize += dataPackage.size;
             [self recordTaskExecution:_taskExecuting];
             _taskExecuting = nil;
@@ -71,14 +71,25 @@
 
 - (void)sendDataBehavior
 {
-    if (_dataPackageBufferedQueue.bufferedFlowSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
+//    if (self.uniqueID == 1) {
+//        NSLog(@"satellite-%ld buffered data %lf MB", self.uniqueID, self.bufferedDataSize);
+//    }
+    
+    if (self.dataPackageBufferedQueue.bufferedFlowSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
         SNSSGDPCTTaskExecution *newTask = [[SNSSGDPCTTaskExecution alloc] init];
         SNSSGDataPackgeCollection *newDPC = [[SNSSGDataPackgeCollection alloc] init];
-        newDPC.dataPackageCollection = [_dataPackageBufferedQueue productDataPackageCollection];
+        newDPC.dataPackageCollection = [self.dataPackageBufferedQueue productDataPackageCollection];
         newTask.dpc = newDPC;
+        
+//        if (self.uniqueID == 1) {
+//            NSLog(@"satellite-%ld build new dpct", self.uniqueID);
+//        }
         
         for (SNSSatelliteAntenna *antenna in self.antennas) {
             if (antenna.type == SNSSatelliteAntennaFunctionTypeSendData) {
+//                if (self.uniqueID == 1) {
+//                    NSLog(@"find sending data antenna");
+//                }
                 [antenna addSendingTransmissionTask:newTask];
                 break;
             }
@@ -94,6 +105,7 @@
 - (void)antenna:(SNSSatelliteAntenna *)antenna sendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
     self.bufferedDataSize -= dataPackageCollection.size;
+    
     [self recordSendingData:dataPackageCollection];
 }
 
@@ -120,6 +132,7 @@
 - (void)recordSendingData:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
     NSString *log = [NSString stringWithFormat:@"satellite-%ld send %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
+    
     fprintf(self.dataSendingLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
@@ -154,7 +167,7 @@
     return _taskExecutionQueue;
 }
 
-- (void)dealloc
+- (void)stop
 {
     fclose(self.taskExecutionLog);
     fclose(self.dataSendingLog);
