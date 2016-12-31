@@ -23,13 +23,16 @@ typedef NS_ENUM(NSInteger, SNSSatelliteAntennaFunctionType) {
 
 
 
-@protocol SNSSatelliteAntennaDelegate <NSObject>
+@protocol SNSUserSatelliteAntennaDelegate <NSObject>
 
 @optional
-- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna receiveDataPackageCollection:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
-- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna sendDataPackageCollection:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
+// 对所有种类卫星
+- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna didReceiveDataPackageCollection:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
+- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna didSendDataPackageCollection:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
+- (void)antenna:(nonnull SNSSatelliteAntenna *)antenna didFailToSendDataPackageCollection:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
+
+// 对中继星
 - (BOOL)antenna:(nonnull SNSSatelliteAntenna *)antenna confirmConnectionWithAntenna:(nonnull SNSSatelliteAntenna *)anotherAntenna;
-- (BOOL)antenna:(nonnull SNSSatelliteAntenna *)antenna requestConnectionForDpct:(nonnull SNSSGDPCTTaskExecution *)dpctTaskExecution;
 - (BOOL)antenna:(nonnull SNSSatelliteAntenna *)antenna scheduleConnectionWithAntenna:(nonnull SNSSatelliteAntenna *)anotherAntenna forDpct:(nonnull SNSSGDPCTTaskExecution *)dpctTaskExecution;
 
 @end
@@ -44,11 +47,16 @@ typedef NS_ENUM(NSInteger, SNSSatelliteAntennaFunctionType) {
 @property (nonatomic, weak, nullable) SNSSatellite *owner;
 @property (nonatomic, weak, nullable) id<SNSSatelliteAntennaDelegate> delegate;
 
-@property (nonatomic, strong, nonnull) SNSSGDPCTTaskExecutionQueue *dpcSendingTaskQueue;
-@property (nonatomic, strong, nonnull) SNSSGDPCTTaskExecution *dpcSending;
+@property (nonatomic, getter=isSending) BOOL sending;
+@property (nonatomic, getter=isReceiving) BOOL receiving;
+
+//@property (nonatomic, strong, nonnull) SNSSGDPCTTaskExecutionQueue *dpcSendingTaskQueue;
+@property (nonatomic, strong, nullable) SNSSGDPCTTaskExecution *dpcSending;
 
 @property (nonatomic, strong, nullable) SNSSGDPCTTaskExecutionQueue *dpcReceivingTaskQueue;
 @property (nonatomic, strong, nullable) SNSSGDPCTTaskExecution *dpcReceiving;
+
+
 
 // automatically behave
 - (void)continueAction;
@@ -59,6 +67,6 @@ typedef NS_ENUM(NSInteger, SNSSatelliteAntennaFunctionType) {
 
 
 // task management
-- (void)addSendingTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)task;
+- (void)schedualSendingTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)task;
 
 @end

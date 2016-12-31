@@ -8,48 +8,49 @@
 
 #import "SNSUserSatelliteAntenna.h"
 
+#import "SNSRouteRecord.h"
+#import "SNSSatellite.h"
+
 @implementation SNSUserSatelliteAntenna
+
+- (void)schedualSendingTransmissionTask:(SNSSGDPCTTaskExecution *)task
+{
+    SNSRouteRecord *routeRecord = [[SNSRouteRecord alloc] init];
+    routeRecord.timeStamp = SYSTEM_TIME;
+    routeRecord.routerID = self.owner.uniqueID;
+    [task.dpc addRouteRecord:routeRecord];
+    
+    self.dpcSending = task;
+    self.sending = YES;
+}
 
 - (void)sendDataBehavior
 {
     [super sendDataBehavior];
     
-    //NSLog(@"user sending data");
-    
-    
-    
     if (self.dpcSending == nil) {
-        self.dpcSending = [self.dpcSendingTaskQueue pop];
-        if (self.dpcSending != nil) {
-            self.dpcSending.fromAntenna = self;
-        }
+        self.sending =  NO;
     }
     else {
-//        if (self.uniqueID == 1) {
-//            NSLog(@"dpc state:%ld", self.dpcSending.state);
-//        }
+        // dpcSending的初始状态就是adjusting
         if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateCompleted) {
-            [self.delegate antenna:self sendDataPackageCollection:self.dpcSending.dpc];
-            self.dpcSending = [self.dpcSendingTaskQueue pop];
-        }
-        else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateRequesting) {
-            if ([self.delegate antenna:self requestConnectionForDpct:self.dpcSending]) {
-                self.dpcSending.state = SNSSGDPCTTaskExecutionStateAdjusting;
-            }
-            else {
-                self.dpcSending.state = SNSSGDPCTTaskExecutionStateQueueing;
-//                if (self.uniqueID == 1) {
-//                    NSLog(@"fail to request network connect");
-//                }
-            }
+            [self.delegate antenna:self didSendDataPackageCollection:self.dpcSending.dpc];
+            [self stopSending];
         }
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateConnectionFailed) {
-            self.dpcSending.state = SNSSGDPCTTaskExecutionStateQueueing;
+            [self.delegate antenna:self failToSendDataPackageCollection:self.dpcSending.dpc];
+            [self stopSending];
         }
         else {
             [self.dpcSending continueSend];
         }
     }
+}
+
+- (void)stopSending
+{
+    self.sending = NO;
+    self.dpcSending = nil;
 }
 
 @end

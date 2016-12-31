@@ -47,7 +47,10 @@
     _orbitRadianSpeed = 2 * M_PI / _orbitPeriod;
 }
 
-
+- (SNSRadian)currentTheta
+{
+    return [SNSMath thetaOfSatellite:self atTime:SYSTEM_TIME];
+}
 
 //- (NSString *)description
 //{

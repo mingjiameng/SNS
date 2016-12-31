@@ -31,7 +31,7 @@ typedef struct {
 
 @interface SNSSatellite : NSObject <SNSSatelliteAntennaDelegate>
 
-@property (nonatomic) NSUInteger uniqueID;
+@property (nonatomic) SNSSatelliteTag uniqueID;
 @property (nonatomic) SNSSatelliteType type;
 @property (nonatomic) SNSSatelliteOrbit orbit;
 // 缓冲区大小 暂不考虑缓冲区大小的限制

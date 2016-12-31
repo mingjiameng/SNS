@@ -21,18 +21,20 @@
     self = [super init];
     
     if (self) {
-        _dpcSendingTaskQueue = [[SNSSGDPCTTaskExecutionQueue alloc] init];
+        //_dpcSendingTaskQueue = [[SNSSGDPCTTaskExecutionQueue alloc] init];
         _dpcReceivingTaskQueue = [[SNSSGDPCTTaskExecutionQueue alloc] init];
+        _sending = NO;
+        _receiving = NO;
     }
     
     return self;
 }
 
-- (void)addSendingTransmissionTask:(SNSSGDPCTTaskExecution *)task
+- (void)schedualSendingTransmissionTask:(SNSSGDPCTTaskExecution *)task
 {
-    task.fromAntenna = self;
-    task.state = SNSSGDPCTTaskExecutionStateQueueing;
-    [self.dpcSendingTaskQueue addTransmissionTask:task];
+//    task.fromAntenna = self;
+//    task.state = SNSSGDPCTTaskExecutionStateQueueing;
+//    _dpcSending = task;
 }
 
 - (void)continueAction

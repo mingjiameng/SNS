@@ -73,7 +73,7 @@
 
 - (void)readInUserSatellitesParam
 {
-    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/user_satellite_param.txt", "r");
+    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/detail_detect_satellite_param.txt", "r");
     assert(param != NULL);
     
     int n;
@@ -90,7 +90,6 @@
         SNSDetailDetectSatellite *satellite = [[SNSDetailDetectSatellite alloc] init];
         fscanf(param, "%d", &satellite_id);
         satellite.uniqueID = satellite_id;
-        
         fscanf(param, "%lf %lf %lf %lf %lf %lf %d", &raan, &aop, &oi, &sma, &e, &ta, &retrograde);
         SNSSatelliteOrbit orbit;
         orbit.raan = raan;
@@ -146,7 +145,6 @@
         SNSDelaySatellite *satellite = [[SNSDelaySatellite alloc] init];
         fscanf(param, "%d", &satellite_id);
         satellite.uniqueID = satellite_id;
-        
         fscanf(param, "%lf %lf %lf %lf %lf %lf", &raan, &aop, &oi, &sma, &e, &ta);
         SNSSatelliteOrbit orbit;
         orbit.raan = raan;
@@ -171,7 +169,7 @@
             [antenna_arr addObject:antenna];
             [_antennas addObject:antenna];
         }
-        
+        //fscanf(param, "\n");
         satellite.antennas = antenna_arr;
         [_delaySatellites addObject:satellite];
     }

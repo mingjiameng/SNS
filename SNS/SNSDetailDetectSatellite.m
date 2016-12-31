@@ -18,17 +18,14 @@
 #import "SNSSGDPCTTaskExecutionQueue.h"
 
 #import "SNSSatelliteAntenna.h"
+#import "SNSUserSatelliteAntenna.h"
 
 @interface SNSDetailDetectSatellite ()
 
 @property (nonatomic, strong, nonnull) SNSSGTaskExecutionQueue *taskExecutionQueue;
-@property (nonatomic, strong, nonnull) SNSSGDPBufferedQueue *dataPackageBufferedQueue;
 @property (nonatomic, strong, nonnull) SNSSGDPCTTaskExecutionQueue *transmissionTaskQueue;
 
 @property (nonatomic, strong, nullable) SNSSatelliteGraphicTaskExecution *taskExecuting; // 正在执行中的成像任务
-
-@property (nonatomic) FILE *taskExecutionLog;
-@property (nonatomic) FILE *dataSendingLog;
 
 @end
 
@@ -71,91 +68,30 @@
 
 - (void)sendDataBehavior
 {
-//    if (self.uniqueID == 1) {
-//        NSLog(@"satellite-%ld buffered data %lf MB", self.uniqueID, self.bufferedDataSize);
-//    }
-    
-    if (self.dataPackageBufferedQueue.bufferedFlowSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
-        SNSSGDPCTTaskExecution *newTask = [[SNSSGDPCTTaskExecution alloc] init];
-        SNSSGDataPackgeCollection *newDPC = [[SNSSGDataPackgeCollection alloc] init];
-        newDPC.dataPackageCollection = [self.dataPackageBufferedQueue productDataPackageCollection];
-        newTask.dpc = newDPC;
-        
-//        if (self.uniqueID == 1) {
-//            NSLog(@"satellite-%ld build new dpct", self.uniqueID);
-//        }
-        
-        for (SNSSatelliteAntenna *antenna in self.antennas) {
-            if (antenna.type == SNSSatelliteAntennaFunctionTypeSendData) {
-//                if (self.uniqueID == 1) {
-//                    NSLog(@"find sending data antenna");
-//                }
-                [antenna addSendingTransmissionTask:newTask];
-                break;
-            }
+    SNSUserSatelliteAntenna *sendingAntenna = nil;
+    for (SNSUserSatelliteAntenna *antenna in self.antennas) {
+        if (antenna.type == SNSSatelliteAntennaFunctionTypeSendData) {
+            sendingAntenna = antenna;
+            break;
         }
     }
     
-    for (SNSSatelliteAntenna *antenna in self.antennas) {
-        [antenna continueAction];
+    if (sendingAntenna == nil) {
+        return;
     }
     
-}
-
-- (void)antenna:(SNSSatelliteAntenna *)antenna sendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
-{
-    self.bufferedDataSize -= dataPackageCollection.size;
-    
-    [self recordSendingData:dataPackageCollection];
-}
-
-- (BOOL)antenna:(SNSSatelliteAntenna *)antenna requestConnectionForDpct:(SNSSGDPCTTaskExecution *)dpctTaskExecution
-{
-    return [self.flowTransportDelegate schedualDPCTransmission:dpctTaskExecution forSatellite:self];
-}
-
-- (SNSSGDPBufferedQueue *)dataPackageBufferedQueue
-{
-    if (!_dataPackageBufferedQueue) {
-        _dataPackageBufferedQueue = [[SNSSGDPBufferedQueue alloc] init];
+    // 如果有正在传输的dpct，就继续传输
+    if (sendingAntenna.isSending) {
+        [sendingAntenna continueAction];
+    }
+    else if (self.dataPackageBufferedQueue.bufferedFlowSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
+        SNSSGDPCTTaskExecution *dpct = [self.flowTransportDelegate schedualDataTransmissionForSatellite:self];
+        if (dpct != nil) {
+            [self.dataPackageBufferedQueue removeDataPackage:dpct.dpc.dataPackageCollection];
+            [sendingAntenna schedualSendingTransmissionTask:dpct];
+        }
     }
     
-    return _dataPackageBufferedQueue;
-}
-
-- (void)recordTaskExecution:(SNSSatelliteGraphicTaskExecution *)taskExecuted
-{
-    NSString *log = [NSString stringWithFormat:@"satellite-%ld execute task-%ld and produced %lf MB data at time %lf", self.uniqueID, taskExecuted.task.uniqueID, taskExecuted.dataProduced, SYSTEM_TIME];
-    fprintf(self.taskExecutionLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
-}
-
-- (void)recordSendingData:(SNSSGDataPackgeCollection *)dataPackageCollection
-{
-    NSString *log = [NSString stringWithFormat:@"satellite-%ld send %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
-    
-    fprintf(self.dataSendingLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
-}
-
-- (FILE *)taskExecutionLog
-{
-    if (_taskExecutionLog == NULL) {
-        NSString *taskExecutionLogFilePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03ld_task_execution_log.txt", self.uniqueID];
-        _taskExecutionLog = fopen([taskExecutionLogFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
-        assert(_taskExecutionLog != NULL);
-    }
-    
-    return _taskExecutionLog;
-}
-
-- (FILE *)dataSendingLog
-{
-    if (_dataSendingLog == NULL) {
-        NSString *dataSendingLogFilePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03ld_data_sending_log.txt", self.uniqueID];
-        _dataSendingLog = fopen([dataSendingLogFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
-        assert(_dataSendingLog != NULL);
-    }
-    
-    return _dataSendingLog;
 }
 
 - (SNSSGTaskExecutionQueue *)taskExecutionQueue
@@ -167,10 +103,6 @@
     return _taskExecutionQueue;
 }
 
-- (void)stop
-{
-    fclose(self.taskExecutionLog);
-    fclose(self.dataSendingLog);
-}
+
 
 @end

@@ -41,7 +41,7 @@ int main(int argc, const char * argv[]) {
 //        NSLog(@"max_lati:%lf", max_lati);
         
         SNSCoreCenter *center = [SNSCoreCenter sharedCoreCenter];
-        [center fire];
+        //[center fire];
         
     }
     return 0;

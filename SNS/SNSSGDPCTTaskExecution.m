@@ -10,26 +10,9 @@
 
 @implementation SNSSGDPCTTaskExecution
 
-//- (void)continueAction
-//{
-//    if (self.type == SNSSGDPCTTaskExecutionTypeSend) {
-//        [self continueSend];
-//    }
-//    else if (self.type == SNSSGDPCTTaskExecutionTypeReceive) {
-//        [self continueReceive];
-//    }
-//    
-//}
-
 - (void)continueSend
 {
-    if (self.state == SNSSGDPCTTaskExecutionStateQueueing) {
-        self.state = SNSSGDPCTTaskExecutionStateRequesting;
-    } // 由任务执行者通过申请connection将task的状态从requesting置为adjusting
-    else if (self.state == SNSSGDPCTTaskExecutionStateAdjusting) {
-
-    } // 由数据接收者将task的状态从adjusting置为transporting
-    else if (self.state == SNSSGDPCTTaskExecutionStateTransporting) {
+    if (self.state == SNSSGDPCTTaskExecutionStateTransporting) {
         if (SYSTEM_TIME >= self.transportAction.startTime + self.transportAction.expectedTimeCost) {
             self.state = SNSSGDPCTTaskExecutionStateCompleted;
         }

@@ -8,9 +8,14 @@
 
 #import "SNSSatelliteGraphicDataPackage.h"
 
+#import "SNSRouteRecord.h"
+
 @interface SNSSGDataPackgeCollection : NSObject
 
 @property (nonatomic, strong, nonnull) NSArray<SNSSatelliteGraphicDataPackage *> *dataPackageCollection;
 @property (nonatomic) SNSNetworkFlowSize size;
+
+- (void)clearRouteRecord;
+- (void)addRouteRecord:(nonnull SNSRouteRecord *)record;
 
 @end

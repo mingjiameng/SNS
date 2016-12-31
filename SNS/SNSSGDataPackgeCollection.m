@@ -8,6 +8,12 @@
 
 #import "SNSSGDataPackgeCollection.h"
 
+@interface SNSSGDataPackgeCollection ()
+
+@property (nonatomic, nonnull, strong) NSMutableArray<SNSRouteRecord *> *routeRecords;
+
+@end
+
 @implementation SNSSGDataPackgeCollection
 
 - (void)setDataPackageCollection:(NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackageCollection
@@ -20,6 +26,25 @@
     }
     
     _size = flowSize;
+}
+
+- (NSMutableArray <SNSRouteRecord *> *)routeRecords
+{
+    if (_routeRecords == nil) {
+        _routeRecords = [[NSMutableArray alloc] init];
+    }
+    
+    return _routeRecords;
+}
+
+- (void)clearRouteRecord
+{
+    [self.routeRecords removeAllObjects];
+}
+
+- (void)addRouteRecord:(SNSRouteRecord *)record
+{
+    [self.routeRecords addObject:record];
 }
 
 @end

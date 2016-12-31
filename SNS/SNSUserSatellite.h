@@ -9,30 +9,45 @@
 #import <Foundation/Foundation.h>
 
 #import "SNSSatellite.h"
+#import "SNSUserSatelliteAntenna.h"
 
 @class SNSUserSatellite;
 @class SNSSatelliteGraphicTaskExecution;
-
+@class SNSSGDPCTTaskExecution;
+@class SNSSGDPBufferedQueue;
 
 @protocol SNSUserSatelliteFlowTransportDelegate <NSObject> // 流量传输代理
-
-- (BOOL)schedualDPCTransmission:(nonnull SNSSGDPCTTaskExecution *)dataTransmissionTask forSatellite:(nonnull SNSUserSatellite *)userSatellite;
+@optional
+- (nullable SNSSGDPCTTaskExecution *)schedualDataTransmissionForSatellite:(nonnull SNSUserSatellite *)userSatellite;
 
 @end
 
 
 @protocol SNSUserSatelliteTaskQueueDataSource <NSObject>
-
+@optional
+// 详查星任务队列
 - (nonnull NSArray<SNSSatelliteGraphicTaskExecution *> *)newTaskExecutionQueueForSatellite:(nonnull SNSUserSatellite *)userSatellite;
+
+// 普查星DPC数据源
+- (nullable SNSSatelliteGraphicDataPackage *)newDpcForSatellite:(nonnull SNSUserSatellite *)userSatellite;
 
 @end
 
 
-@interface SNSUserSatellite : SNSSatellite
+@interface SNSUserSatellite : SNSSatellite <SNSUserSatelliteAntennaDelegate>
 
 // 事务代理
 @property (nonatomic, weak, nullable) id<SNSUserSatelliteTaskQueueDataSource> taskQueueDataSource;
 @property (nonatomic, weak, nullable) id<SNSUserSatelliteFlowTransportDelegate> flowTransportDelegate;
+
+@property (nonatomic, strong, nonnull) SNSSGDPBufferedQueue *dataPackageBufferedQueue;
+
+@property (nonatomic, nonnull) FILE *taskExecutionLog;
+@property (nonatomic, nonnull) FILE *dataSendingLog;
+
+- (void)recordTaskExecution:(nonnull SNSSatelliteGraphicTaskExecution *)taskExecuted;
+- (void)recordSendingData:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
+
 
 
 @end

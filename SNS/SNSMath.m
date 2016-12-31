@@ -52,7 +52,7 @@
     return period;
 }
 
-+ (SNSRadian)thetaOfSatellite:(SNSSatellite *)satellite AtTime:(SNSSatelliteTime)time
++ (SNSRadian)thetaOfSatellite:(SNSSatellite *)satellite atTime:(SNSSatelliteTime)time
 {
     double theta0 = satellite.orbit.ta;
     double theta = theta0 + satellite.orbitRadianSpeed * time; // 单位：弧度

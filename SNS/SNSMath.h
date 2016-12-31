@@ -23,6 +23,7 @@
 + (nonnull SNSSpacePoint *)spacePointOfSatellite:(nonnull SNSSatellite *)satellite atTime:(SNSSatelliteTime)time;
 
 // 星下点算法
++ (SNSRadian)thetaOfSatellite:(nonnull SNSSatellite *)satellite atTime:(SNSSatelliteTime)time;
 + (nonnull SNSEarthPoint *)subSatellitePoint:(nonnull SNSSatellite *)satellite atTime:(SNSSatelliteTime)time;
 
 //+ (void)satelliteOrbit:(SNSSatelliteOrbit)orbit period:(SNSSatelliteTime &)period orbitAngleSpeed:(SNSRadian &)angleSpeed;

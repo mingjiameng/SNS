@@ -12,9 +12,8 @@
 
 @interface SNSSatelliteGraphicDataPackage : NSObject
 
+@property (nonatomic) SNSDataPackageTag uniqueID; // ID从网络管理中心获得
 @property (nonatomic) SNSNetworkFlowSize size;
-
 @property (nonatomic, strong, nonnull) SNSSatelliteGraphicTaskExecution *taskExecution;
-
 
 @end

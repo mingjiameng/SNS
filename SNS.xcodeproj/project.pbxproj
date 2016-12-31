@@ -31,6 +31,8 @@
 		4413B4C31E0D187600DD7600 /* SNSMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C21E0D187600DD7600 /* SNSMath.m */; };
 		4413B4C61E0D237700DD7600 /* SNSHotArea.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C51E0D237700DD7600 /* SNSHotArea.m */; };
 		4413B4C91E0D255F00DD7600 /* SNSSGDetailDetectTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 4413B4C81E0D255F00DD7600 /* SNSSGDetailDetectTask.m */; };
+		441E6D861E15EA0600198113 /* SNSWideAreaScanSatellite.m in Sources */ = {isa = PBXBuildFile; fileRef = 441E6D851E15EA0600198113 /* SNSWideAreaScanSatellite.m */; };
+		441E6D891E164AF000198113 /* SNSRouteRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 441E6D881E164AF000198113 /* SNSRouteRecord.m */; };
 		44B0BFC11E0FE6A800222965 /* SNSPlanedDetailDetectTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B0BFC01E0FE6A800222965 /* SNSPlanedDetailDetectTask.m */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +99,10 @@
 		4413B4C51E0D237700DD7600 /* SNSHotArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSHotArea.m; sourceTree = "<group>"; };
 		4413B4C71E0D255F00DD7600 /* SNSSGDetailDetectTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSSGDetailDetectTask.h; sourceTree = "<group>"; };
 		4413B4C81E0D255F00DD7600 /* SNSSGDetailDetectTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSSGDetailDetectTask.m; sourceTree = "<group>"; };
+		441E6D841E15EA0600198113 /* SNSWideAreaScanSatellite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSWideAreaScanSatellite.h; sourceTree = "<group>"; };
+		441E6D851E15EA0600198113 /* SNSWideAreaScanSatellite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSWideAreaScanSatellite.m; sourceTree = "<group>"; };
+		441E6D871E164AF000198113 /* SNSRouteRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSRouteRecord.h; sourceTree = "<group>"; };
+		441E6D881E164AF000198113 /* SNSRouteRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSRouteRecord.m; sourceTree = "<group>"; };
 		44B0BFBF1E0FE6A800222965 /* SNSPlanedDetailDetectTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSPlanedDetailDetectTask.h; sourceTree = "<group>"; };
 		44B0BFC01E0FE6A800222965 /* SNSPlanedDetailDetectTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSPlanedDetailDetectTask.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -197,6 +203,8 @@
 				4413B4721E0A140700DD7600 /* SNSUserSatellite.m */,
 				4413B4771E0A178100DD7600 /* SNSDetailDetectSatellite.h */,
 				4413B4AC1E0A80AE00DD7600 /* SNSDetailDetectSatellite.m */,
+				441E6D841E15EA0600198113 /* SNSWideAreaScanSatellite.h */,
+				441E6D851E15EA0600198113 /* SNSWideAreaScanSatellite.m */,
 				4413B4961E0A2B9200DD7600 /* MICRO_SATELLITE.h */,
 				4413B4991E0A5B6900DD7600 /* SNSDelaySatellite.h */,
 				4413B49A1E0A5B6A00DD7600 /* SNSDelaySatellite.m */,
@@ -206,6 +214,8 @@
 				4413B4B21E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m */,
 				4413B4B41E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.h */,
 				4413B4B51E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m */,
+				441E6D871E164AF000198113 /* SNSRouteRecord.h */,
+				441E6D881E164AF000198113 /* SNSRouteRecord.m */,
 			);
 			name = Satellites;
 			sourceTree = "<group>";
@@ -300,6 +310,8 @@
 				4413B48E1E0A1DB600DD7600 /* SNSSatelliteGraphicTaskExecution.m in Sources */,
 				4413B4BA1E0CD93600DD7600 /* SNSSGDataPackgeCollection.m in Sources */,
 				4413B4BD1E0D17EE00DD7600 /* SNSSpacePoint.m in Sources */,
+				441E6D891E164AF000198113 /* SNSRouteRecord.m in Sources */,
+				441E6D861E15EA0600198113 /* SNSWideAreaScanSatellite.m in Sources */,
 				4413B4541E0A0A9B00DD7600 /* main.m in Sources */,
 				4413B4A11E0A693600DD7600 /* SNSSGDPCTTaskExecution.m in Sources */,
 				4413B4AB1E0A803A00DD7600 /* SNSCoreCenter.m in Sources */,

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "SNSSatelliteGraphicDataPackage.h"
+#import "SNSSatelliteGraphicDataPackage.h"
 
 @interface SNSSGDPBufferedQueue : NSObject
 
@@ -16,8 +17,10 @@
 
 @property (nonatomic, readonly) SNSNetworkFlowSize bufferedFlowSize;
 
+- (void)insertDataPackage:(nonnull NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackage;
 - (void)addDataPackage:(nonnull SNSSatelliteGraphicDataPackage *)dataPackage;
-- (nonnull NSArray<SNSSatelliteGraphicDataPackage *> *)productDataPackageCollection;
+//- (nonnull NSArray<SNSSatelliteGraphicDataPackage *> *)productDataPackageCollection;
+- (void)removeDataPackage:(nonnull NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackages;
 
 
 @end
