@@ -110,7 +110,7 @@
             fscanf(param, "%d %d %lf", &antenna_id, &antenna_type, &antenna_bandWidth);
             SNSUserSatelliteAntenna *antenna = [[SNSUserSatelliteAntenna alloc] init];
             antenna.uniqueID = antenna_id;
-            antenna.type = antenna_type;
+            antenna.functionType = antenna_type;
             antenna.bandWidth = antenna_bandWidth;
             antenna.owner = satellite;
             antenna.delegate = satellite;
@@ -162,7 +162,7 @@
             fscanf(param, "%d %d %lf", &antenna_id, &antenna_type, &antenna_bandWidth);
             SNSDelaySatelliteAntenna *antenna = [[SNSDelaySatelliteAntenna alloc] init];
             antenna.uniqueID = antenna_id;
-            antenna.type = antenna_type;
+            antenna.functionType = antenna_type;
             antenna.bandWidth = antenna_bandWidth;
             antenna.owner = satellite;
             antenna.delegate = satellite;

@@ -12,7 +12,7 @@
 #import "SNSSatelliteAction.h"
 #import "SNSSGDataPackgeCollection.h"
 
-@class SNSSatelliteAntenna;
+@class SNSAntenna;
 @class SNSSGDPCTTaskExecution;
 
 typedef NS_ENUM(NSInteger, SNSSGDPCTTaskExecutionState) {
@@ -50,8 +50,8 @@ typedef NS_ENUM(NSInteger, SNSSGDPCTTaskExecutionState) {
 
 //@property (nonatomic, weak, nullable) id<SNSSGDPCTTaskExecutionDelegate> delegate;
 
-@property (nonatomic, weak, nullable) SNSSatelliteAntenna *fromAntenna;
-@property (nonatomic, weak, nullable) SNSSatelliteAntenna *toAntenna;
+@property (nonatomic, weak, nullable) SNSAntenna *fromAntenna;
+@property (nonatomic, weak, nullable) SNSAntenna *toAntenna;
 
 @property (nonatomic, strong, nonnull) SNSSatelliteAction *transportAction;
 

@@ -10,10 +10,15 @@
 
 #import "SNSUserSatellite.h"
 
+@class SNSDetailDetectSatellite;
+@class SNSSatelliteGraphicTaskExecution;
+@class SNSSatelliteGraphicDataPackage;
+
 @interface SNSTaskDistributionCenter : NSObject <SNSUserSatelliteTaskQueueDataSource>
 
 + (nonnull instancetype)sharedTaskDistributionCenter;
 
 - (nonnull NSArray<SNSSatelliteGraphicTaskExecution *> *)newTaskExecutionQueueForSatellite:(nonnull SNSDetailDetectSatellite *)userSatellite;
+- (nullable SNSSatelliteGraphicDataPackage *)newDpcForSatellite:(nonnull SNSUserSatellite *)userSatellite;
 
 @end

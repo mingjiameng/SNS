@@ -71,7 +71,7 @@
 - (NSString *)spaceBufferedDataDescription
 {
     SNSSpacePoint *point = [SNSMath spacePointOfSatellite:self atTime:SYSTEM_TIME];
-    NSString *log = [NSString stringWithFormat:@"satellite-%ld buffered %lf MB data at position <%lf, %lf, %lf>", self.uniqueID, self.bufferedDataSize, point.x, point.y, point.z];
+    NSString *log = [NSString stringWithFormat:@"satellite-%d buffered %lf MB data at position <%lf, %lf, %lf>", self.uniqueID, self.bufferedDataSize, point.x, point.y, point.z];
     //NSLog(@"%@", log);
     return log;
 }

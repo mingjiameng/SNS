@@ -33,14 +33,6 @@
 
 @implementation SNSDetailDetectSatellite
 
-- (void)updateState
-{
-    [super updateState];
-    
-    [self executeTaskBehavior];
-    [self sendDataBehavior];
-}
-
 - (void)executeTaskBehavior
 {
     if (_taskExecuting != nil) {
@@ -70,7 +62,7 @@
 {
     SNSUserSatelliteAntenna *sendingAntenna = nil;
     for (SNSUserSatelliteAntenna *antenna in self.antennas) {
-        if (antenna.type == SNSSatelliteAntennaFunctionTypeSendData) {
+        if (antenna.functionType == SNSAntennaFunctionTypeSendData) {
             sendingAntenna = antenna;
             break;
         }

@@ -12,7 +12,10 @@
 
 - (void)continueSend
 {
-    if (self.state == SNSSGDPCTTaskExecutionStateTransporting) {
+    if (self.state == SNSSGDPCTTaskExecutionStateQueueing) {
+        self.state = SNSSGDPCTTaskExecutionStateRequesting;
+    }
+    else if (self.state == SNSSGDPCTTaskExecutionStateTransporting) {
         if (SYSTEM_TIME >= self.transportAction.startTime + self.transportAction.expectedTimeCost) {
             self.state = SNSSGDPCTTaskExecutionStateCompleted;
         }

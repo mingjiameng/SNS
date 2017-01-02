@@ -68,7 +68,9 @@
 
 - (void)insertDataPackage:(NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackage
 {
-    
+    for (SNSSatelliteGraphicDataPackage *dp in dataPackage) {
+        [self.bufferedDataPackages insertObject:dp atIndex:0];
+    }
 }
 
 @end

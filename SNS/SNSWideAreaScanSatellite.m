@@ -11,6 +11,7 @@
 #import "SNSSGDataPackgeCollection.h"
 #import "SNSSGDPBufferedQueue.h"
 #import "SNSUserSatelliteAntenna.h"
+#import "SNSSGDPCTTaskExecution.h"
 
 @interface SNSWideAreaScanSatellite ()
 
@@ -33,13 +34,6 @@
     return self;
 }
 
-- (void)updateState
-{
-    [super updateState];
-    [self executeTaskBehavior];
-    [self sendDataBehavior];
-}
-
 - (void)executeTaskBehavior
 {
     // 每60秒询问是否有灾害发生
@@ -58,10 +52,9 @@
 
 - (void)sendDataBehavior
 {
-    
     SNSUserSatelliteAntenna *sendingAntenna = nil;
     for (SNSUserSatelliteAntenna *antenna in self.antennas) {
-        if (antenna.type == SNSSatelliteAntennaFunctionTypeSendData) {
+        if (antenna.functionType == SNSAntennaFunctionTypeSendData) {
             sendingAntenna = antenna;
             break;
         }

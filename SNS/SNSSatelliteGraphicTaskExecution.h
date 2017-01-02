@@ -24,6 +24,8 @@ typedef NS_ENUM(NSInteger, SNSSatelliteGraphicTaskExecutionState) {
 
 @interface SNSSatelliteGraphicTaskExecution : NSObject
 
+@property (nonatomic) SNSTaskExecutionTag uniqueID;
+
 @property (nonatomic) SNSSatelliteGraphicTaskExecutionState state;
 @property (nonatomic) SNSNetworkFlowSize dataProduced;
 

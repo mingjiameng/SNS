@@ -24,16 +24,20 @@ typedef int SNSSatelliteTag;
 typedef int  SNSAntennaTag;
 typedef int SNSDataPackageTag;
 typedef int SNSRouterHopTag;
+typedef int SNSTaskExecutionTag;
+typedef int SNSGroundStationTag;
 
 typedef struct _SNSTimeRange {
     SNSSatelliteTime beginAt;
     SNSSatelliteTime length;
-} SNSTimeRange;
+}SNSTimeRange;
 
 #define SYSTEM_TIME [[SNSCoreCenter sharedCoreCenter] systemTime]
 
 #define MINIMUM_DATA_PACKAGE_COLLECTION_SIZE 20000 // 20 000 MB = 20GB
 #define MAXIMUM_DATA_PACKAGE_COLLECTION_SIZE 50000 // 50 000 MB = 50GB
+
+#define DETAIL_DETECT_TASK_COUNT_PER_ORBIT_PERIOD 4 // 详查型每轨4个任务
 
 #define EARTH_AUTO_ROTATION_ANGLE_SPEED 4.167e-3 // 自转角速度 单位：角度
 

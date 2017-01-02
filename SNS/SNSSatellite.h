@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "SNSSatelliteAntenna.h"
-
 @class SNSSatellite;
+@class SNSSatelliteAntenna;
 
 typedef NS_ENUM(NSInteger, SNSSatelliteType) {
     SNSSatelliteTypeDetailDetection = 1, // 详查
@@ -29,7 +28,7 @@ typedef struct {
 }SNSSatelliteOrbit;
 
 
-@interface SNSSatellite : NSObject <SNSSatelliteAntennaDelegate>
+@interface SNSSatellite : NSObject
 
 @property (nonatomic) SNSSatelliteTag uniqueID;
 @property (nonatomic) SNSSatelliteType type;

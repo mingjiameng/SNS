@@ -12,6 +12,9 @@
 
 @interface SNSUserSatelliteAntenna : SNSSatelliteAntenna
 
+@property (nonatomic, weak, nullable) id<SNSAntennaDelegate> delegate;
 
+
+- (void)schedualSendingTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)task;
 
 @end

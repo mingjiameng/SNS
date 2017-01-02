@@ -8,8 +8,10 @@
 
 #import "SNSUserSatellite.h"
 
+#import "SNSUserSatelliteAntenna.h"
+
 @class SNSSGDPBufferedQueue;
 
-@interface SNSWideAreaScanSatellite : SNSUserSatellite <SNSSatelliteAntennaDelegate>
+@interface SNSWideAreaScanSatellite : SNSUserSatellite <SNSAntennaDelegate>
 
 @end

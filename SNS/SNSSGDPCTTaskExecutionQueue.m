@@ -51,7 +51,7 @@
         return SYSTEM_TIME;
     }
     
-    return dpct.transportAction.ExpectedStartTime + dpct.transportAction.expectedTimeCost;
+    return dpct.transportAction.ExpectedStartTime + dpct.transportAction.expectedTimeCost + 1.0f;
 }
 
 @end

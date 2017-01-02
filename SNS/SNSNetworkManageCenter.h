@@ -18,5 +18,6 @@
 + (nonnull instancetype)sharedNetworkManageCenter;
 
 - (BOOL)schedualDPCTransmission:(nonnull SNSSGDPCTTaskExecution *)dataTransmissionTask forSatellite:(nonnull SNSUserSatellite *)userSatellite;
+- (void)satellite:(SNSUserSatellite *)userSatellite didSendPackageCollection:(SNSSGDataPackgeCollection *)dpc;
 
 @end

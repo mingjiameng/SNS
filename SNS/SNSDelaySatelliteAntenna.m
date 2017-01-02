@@ -9,6 +9,9 @@
 #import "SNSDelaySatelliteAntenna.h"
 
 #import "SNSMath.h"
+#import "SNSSGDPCTTaskExecution.h"
+#import "SNSSGDPCTTaskExecutionQueue.h"
+#import "SNSRouteRecord.h"
 
 @interface SNSDelaySatelliteAntenna ()
 
@@ -28,7 +31,7 @@
     }
     else {
         if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateCompleted) {
-            [self.delegate antenna:self sendDataPackageCollection:self.dpcSending.dpc];
+            [self.delegate antenna:self didSendDataPackageCollection:self.dpcSending.dpc];
             self.dpcSending = [self.dpcSendingTaskQueue pop];
         }
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateRequesting) {
@@ -55,7 +58,11 @@
     }
     else {
         if (self.dpcReceiving.state == SNSSGDPCTTaskExecutionStateCompleted) {
-            [self.delegate antenna:self receiveDataPackageCollection:self.dpcReceiving.dpc];
+            SNSRouteRecord *routeRecord = [[SNSRouteRecord alloc] init];
+            routeRecord.timeStamp = SYSTEM_TIME;
+            routeRecord.routerID = self.owner.uniqueID;
+            [self.dpcReceiving.dpc addRouteRecord:routeRecord];
+            [self.delegate antenna:self didReceiveDataPackageCollection:self.dpcReceiving.dpc];
             self.dpcReceiving = nil;
         }
         else if (self.dpcReceiving.state == SNSSGDPCTTaskExecutionStateConfirming) {
@@ -79,7 +86,8 @@
 - (SNSSatelliteTime)timeCostToUndertakenDataTransmissionTask:(SNSSGDPCTTaskExecution *)dataTransmissionTask
 {
     SNSSatelliteTime time = SYSTEM_TIME;
-    SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:dataTransmissionTask.fromAntenna.owner andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
+    SNSSatelliteAntenna *fromAntenna = (SNSSatelliteAntenna *)dataTransmissionTask.fromAntenna;
+    SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:fromAntenna.owner andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
     
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
     if (expectedEndTime + 300 >= visibleTimeRange.beginAt + visibleTimeRange.length) {
@@ -92,7 +100,8 @@
 - (BOOL)schedualDataTransmissionTask:(SNSSGDPCTTaskExecution *)dataTransmissionTask
 {
     SNSSatelliteTime time = SYSTEM_TIME;
-    SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:dataTransmissionTask.fromAntenna.owner andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
+    SNSSatelliteAntenna *fromAntenna = (SNSSatelliteAntenna *)dataTransmissionTask.fromAntenna;
+    SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:fromAntenna.owner andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
     
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
     expectedEndTime += 300;
@@ -115,13 +124,19 @@
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
     
     SNSSatelliteAction *transportAction = [[SNSSatelliteAction alloc] init];
-    transportAction.ExpectedStartTime = expectedEndTime + 5;
+    transportAction.ExpectedStartTime = expectedEndTime + 3.0;
     transportAction.expectedTimeCost = dataReceivingTask.dpc.size / dataReceivingTask.fromAntenna.bandWidth;
     dataReceivingTask.transportAction = transportAction;
     
     [self.dpcReceivingTaskQueue addTransmissionTask:dataReceivingTask];
     
     return YES;
+}
+
+- (void)addSendingTransmissionTask:(SNSSGDPCTTaskExecution *)dpctTaskExecution
+{
+    dpctTaskExecution.state = SNSSGDPCTTaskExecutionStateQueueing;
+    [self.dpcSendingTaskQueue addTransmissionTask:dpctTaskExecution];
 }
 
 @end

@@ -19,6 +19,7 @@
 @protocol SNSUserSatelliteFlowTransportDelegate <NSObject> // 流量传输代理
 @optional
 - (nullable SNSSGDPCTTaskExecution *)schedualDataTransmissionForSatellite:(nonnull SNSUserSatellite *)userSatellite;
+- (void)satellite:(nonnull SNSUserSatellite *)userSatellite didSendPackageCollection:(nonnull SNSSGDataPackgeCollection *)dpc;
 
 @end
 
@@ -34,7 +35,7 @@
 @end
 
 
-@interface SNSUserSatellite : SNSSatellite <SNSUserSatelliteAntennaDelegate>
+@interface SNSUserSatellite : SNSSatellite <SNSAntennaDelegate>
 
 // 事务代理
 @property (nonatomic, weak, nullable) id<SNSUserSatelliteTaskQueueDataSource> taskQueueDataSource;
@@ -48,6 +49,7 @@
 - (void)recordTaskExecution:(nonnull SNSSatelliteGraphicTaskExecution *)taskExecuted;
 - (void)recordSendingData:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection;
 
-
+- (void)executeTaskBehavior;
+- (void)sendDataBehavior;
 
 @end

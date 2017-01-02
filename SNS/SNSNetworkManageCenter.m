@@ -9,6 +9,14 @@
 #import "SNSNetworkManageCenter.h"
 
 #import "SNSDelaySatelliteAntenna.h"
+#import "SNSSGDataPackgeCollection.h"
+
+@interface SNSNetworkManageCenter ()
+
+@property (nonatomic, strong, nonnull) NSMutableArray<SNSSGDataPackgeCollection *> *dpcTransporting;
+
+@end
+
 
 @implementation SNSNetworkManageCenter
 
@@ -24,6 +32,22 @@
     return networkManageCenter;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    
+    if (self) {
+        _dpcTransporting = [[NSMutableArray alloc] init];
+    }
+    
+    return self;
+}
+
+- (void)satellite:(SNSUserSatellite *)userSatellite didSendPackageCollection:(SNSSGDataPackgeCollection *)dpc
+{
+    [_dpcTransporting addObject:dpc];
+}
+
 - (BOOL)schedualDPCTransmission:(SNSSGDPCTTaskExecution *)dataTransmissionTask forSatellite:(SNSUserSatellite *)userSatellite
 {
     //NSLog(@"begin schedual connection");
@@ -33,7 +57,7 @@
     for (SNSDelaySatellite *delaySatellite in self.delaySatellites) {
         for (SNSDelaySatelliteAntenna *antenna in delaySatellite.antennas) {
             // 天线的功能应该是接受数据，且没有固定的邻接点
-            if (antenna.type != SNSSatelliteAntennaFunctionTypeReceiveData || antenna.sideHop != nil) {
+            if (antenna.functionType != SNSAntennaFunctionTypeReceiveData || antenna.sideHop != nil) {
                 continue;
             }
             

@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong, nonnull) NSArray<SNSSatelliteGraphicDataPackage *> *dataPackageCollection;
 @property (nonatomic) SNSNetworkFlowSize size;
+@property (nonatomic, nonnull, strong, readonly) NSMutableArray<SNSRouteRecord *> *routeRecords;
 
 - (void)clearRouteRecord;
 - (void)addRouteRecord:(nonnull SNSRouteRecord *)record;

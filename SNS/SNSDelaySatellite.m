@@ -9,7 +9,9 @@
 #import "SNSDelaySatellite.h"
 
 #import "SNSMath.h"
-#import "SNSDelaySatelliteAntenna.h"
+#import "SNSSGDataPackgeCollection.h"
+#import "SNSSGDPCTTaskExecution.h"
+#import "SNSGroundStationAntenna.h"
 
 @interface SNSDelaySatellite ()
 
@@ -33,21 +35,23 @@
     }
 }
 
-- (void)antenna:(SNSSatelliteAntenna *)antenna sendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
+- (void)antenna:(SNSAntenna *)antenna didSendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
     self.bufferedDataSize -= dataPackageCollection.size;
     [self recordDataSend:dataPackageCollection];
 }
 
-- (void)antenna:(SNSSatelliteAntenna *)antenna receiveDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
+- (void)antenna:(SNSAntenna *)antenna didReceiveDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
     self.bufferedDataSize += dataPackageCollection.size;
     [self recordDataReceive:dataPackageCollection];
-    for (SNSSatelliteAntenna *antennaSending in self.antennas) {
-        if (antennaSending.type == SNSSatelliteAntennaFunctionTypeSendData) {
+    
+    for (SNSDelaySatelliteAntenna *antennaSending in self.antennas) {
+        if (antennaSending.functionType == SNSAntennaFunctionTypeSendData) {
             SNSSGDPCTTaskExecution *dpctTaskExecution = [[SNSSGDPCTTaskExecution alloc] init];
             dpctTaskExecution.dpc = dataPackageCollection;
             [antennaSending addSendingTransmissionTask:dpctTaskExecution];
+            break;
         }
     }
 }
@@ -58,7 +62,7 @@
     if ([antenna isKindOfClass:[SNSDelaySatelliteAntenna class]] && [anotherAntenna isKindOfClass:[SNSDelaySatelliteAntenna class]]) {
         SNSDelaySatelliteAntenna *from = (SNSDelaySatelliteAntenna *)anotherAntenna;
         if (from.sideHop == antenna) {
-            return TRUE;
+            return YES;
         }
     }
     
@@ -75,30 +79,34 @@
     return NO;
 }
 
-
-- (BOOL)antenna:(SNSSatelliteAntenna *)antenna scheduleConnectionWithAntenna:(SNSSatelliteAntenna *)anotherAntenna forDpct:(SNSSGDPCTTaskExecution *)dpctTaskExecution
+- (BOOL)antenna:(SNSDelaySatelliteAntenna *)antenna scheduleConnectionWithAntenna:(SNSAntenna *)anotherAntenna forDpct:(SNSSGDPCTTaskExecution *)dpctTaskExecution
 {
-    SNSDelaySatelliteAntenna *to = (SNSDelaySatelliteAntenna *)anotherAntenna;
+    if ([anotherAntenna isKindOfClass:[SNSDelaySatelliteAntenna class]]) {
+        return [(SNSDelaySatelliteAntenna *)anotherAntenna schedualDataReceiving:dpctTaskExecution];
+    }
+    else if ([anotherAntenna isKindOfClass:[SNSGroundStationAntenna class]]) {
+        return [(SNSGroundStationAntenna *)anotherAntenna schedualDataReceiving:dpctTaskExecution];
+    }
     
-    return [to schedualDataReceiving:dpctTaskExecution];
+    return NO;
 }
 
 - (void)recordDataSend:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
-    NSString *log = [NSString stringWithFormat:@"satellite-%ld send %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
+    NSString *log = [NSString stringWithFormat:@"satellite-%d send %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
     fprintf(self.dataSendLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 - (void)recordDataReceive:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
-    NSString *log = [NSString stringWithFormat:@"satellite-%ld receive %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
+    NSString *log = [NSString stringWithFormat:@"satellite-%d receive %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
     fprintf(self.dataReceiveLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 - (FILE *)dataReceiveLog
 {
     if (_dataReceiveLog == NULL) {
-        NSString *filePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/delay_satellite_%03ld_data_receive_log.txt", self.uniqueID];
+        NSString *filePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/delay_satellite_%03d_data_receive_log.txt", self.uniqueID];
         _dataReceiveLog = fopen([filePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
         assert(_dataReceiveLog != NULL);
     }
@@ -109,7 +117,7 @@
 - (FILE *)dataSendLog
 {
     if (_dataSendLog) {
-        NSString *filePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03ld_task_execution_log.txt", self.uniqueID];
+        NSString *filePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03d_task_execution_log.txt", self.uniqueID];
         _dataSendLog = fopen([filePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
         assert(_dataSendLog != NULL);
     }

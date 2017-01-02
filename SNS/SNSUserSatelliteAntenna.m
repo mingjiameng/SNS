@@ -10,6 +10,8 @@
 
 #import "SNSRouteRecord.h"
 #import "SNSSatellite.h"
+#import "SNSSGDPCTTaskExecution.h"
+#import "SNSSGDataPackgeCollection.h"
 
 @implementation SNSUserSatelliteAntenna
 
@@ -18,6 +20,8 @@
     SNSRouteRecord *routeRecord = [[SNSRouteRecord alloc] init];
     routeRecord.timeStamp = SYSTEM_TIME;
     routeRecord.routerID = self.owner.uniqueID;
+    
+    [task.dpc clearRouteRecord];
     [task.dpc addRouteRecord:routeRecord];
     
     self.dpcSending = task;
@@ -38,7 +42,7 @@
             [self stopSending];
         }
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateConnectionFailed) {
-            [self.delegate antenna:self failToSendDataPackageCollection:self.dpcSending.dpc];
+            [self.delegate antenna:self didFailToSendDataPackageCollection:self.dpcSending.dpc];
             [self stopSending];
         }
         else {

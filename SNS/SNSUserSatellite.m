@@ -8,8 +8,27 @@
 
 #import "SNSUserSatellite.h"
 #import "SNSSGDPBufferedQueue.h"
+#import "SNSSGDataPackgeCollection.h"
 
 @implementation SNSUserSatellite
+
+- (void)updateState
+{
+    [super updateState];
+    
+    [self executeTaskBehavior];
+    [self sendDataBehavior];
+}
+
+- (void)executeTaskBehavior
+{
+    
+}
+
+- (void)sendDataBehavior
+{
+    
+}
 
 - (FILE *)taskExecutionLog
 {
@@ -48,6 +67,8 @@
 
 - (void)antenna:(SNSSatelliteAntenna *)antenna didSendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
+    [self.flowTransportDelegate satellite:self didSendPackageCollection:dataPackageCollection];
+    
     self.bufferedDataSize -= dataPackageCollection.size;
     [self recordSendingData:dataPackageCollection];
 }

@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 
 #import "SNSSatellite.h"
+#import "SNSDelaySatelliteAntenna.h"
 
-@interface SNSDelaySatellite : SNSSatellite
+@interface SNSDelaySatellite : SNSSatellite <SNSDelaySatelliteAntennaDelegate>
 
 @end

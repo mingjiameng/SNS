@@ -8,9 +8,11 @@
 
 #import "SNSTaskDistributionCenter.h"
 
-#import "SNSDetailDetectSatellite.h"
 #import "SNSMath.h"
+#import "SNSDetailDetectSatellite.h"
 #import "SNSPlanedDetailDetectTask.h"
+#import "SNSSatelliteGraphicTaskExecution.h"
+#import "SNSSatelliteGraphicDataPackage.h"
 
 @interface SNSTaskDistributionCenter ()
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSSGDetailDetectTask *> *taskList;
@@ -37,13 +39,13 @@
     self = [super init];
     
     if (self) {
-        [self readInTaskFile];
+        [self readInDetailDetectTaskFile];
     }
     
     return self;
 }
 
-- (void)readInTaskFile
+- (void)readInDetailDetectTaskFile
 {
     FILE *task_input_txt = fopen("/Users/zkey/Desktop/science/sns_input/sns_task_source.txt", "r");
     assert(task_input_txt != NULL);
@@ -89,8 +91,8 @@
         return [[NSArray alloc] init];
     }
     
-    NSUInteger task_count = [SNSMath randomIntegerBetween:8 and:10];
-    NSUInteger candidate_task_count = 20;
+    NSUInteger task_count = [SNSMath randomIntegerBetween:DETAIL_DETECT_TASK_COUNT_PER_ORBIT_PERIOD - 1 and:DETAIL_DETECT_TASK_COUNT_PER_ORBIT_PERIOD + 1];
+    NSUInteger candidate_task_count = DETAIL_DETECT_TASK_COUNT_PER_ORBIT_PERIOD * 3;
     NSMutableArray *tmp_task_list = [NSMutableArray arrayWithCapacity:task_count];
     NSUInteger task_index = 0;
     BOOL is_valide_task = NO;
@@ -164,7 +166,7 @@
                 
             }
         } else {
-            NSLog(@"no more task for satellite-%ld", userSatellite.uniqueID);
+            NSLog(@"no more task for satellite-%d", userSatellite.uniqueID);
             break;
         }
         
@@ -218,6 +220,10 @@
     return valid_task_list;
 }
 
+- (SNSSatelliteGraphicDataPackage *)newDpcForSatellite:(SNSUserSatellite *)userSatellite
+{
+    
+}
 
 
 @end
