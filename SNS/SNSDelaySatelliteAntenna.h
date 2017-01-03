@@ -33,7 +33,7 @@
 @property (nonatomic, strong, nullable) SNSSGDPCTTaskExecutionQueue *dpcReceivingTaskQueue;
 @property (nonatomic, strong, nullable) SNSSGDPCTTaskExecution *dpcReceiving;
 
-@property (nonatomic, weak, nullable) SNSSatelliteAntenna *sideHop; // 邻接点
+@property (nonatomic, weak, nullable) SNSAntenna *sideHop; // 邻接点
 @property (nonatomic, weak, nullable) id<SNSDelaySatelliteAntennaDelegate> delegate;
 
 // 从业务星接收数据

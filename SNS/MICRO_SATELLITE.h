@@ -41,6 +41,7 @@ typedef struct _SNSTimeRange {
 
 #define EARTH_AUTO_ROTATION_ANGLE_SPEED 4.167e-3 // 自转角速度 单位：角度
 
+#define SATELLITE_ANTENNA_MOBILITY 180
 #define EXPECTED_SIMULATION_TIME 86400 // 单位：秒，1d * 24h * 60min * 60sec
 #define SIMULATION_TIME_STEP 1 // 仿真时间步长
 

@@ -273,6 +273,8 @@
         [satellite stop];
     }
     
+    [self.networkManageCenter outputDpcRouteRecord];
+    
     fclose(self.detailDetectSatelliteLog);
     fclose(self.delaySatelliteLog);
 }

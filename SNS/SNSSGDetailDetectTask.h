@@ -14,6 +14,6 @@
 
 @property (nonatomic, strong, nonnull) SNSHotArea *hotArea;
 @property (nonatomic) NSUInteger expectedExecutedCount;
-@property (nonatomic) NSUInteger uniqueID;
+@property (nonatomic) SNSTaskExecutionTag uniqueID;
 
 @end

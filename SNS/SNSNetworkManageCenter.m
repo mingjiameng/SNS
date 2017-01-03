@@ -81,4 +81,27 @@
     
 }
 
+- (void)outputDpcRouteRecord
+{
+    FILE *route_record_log = fopen("", "w");
+    assert(route_record_log != NULL);
+    
+    fprintf(route_record_log, "%ld\n", _dpcTransporting.count);
+    for (SNSSGDataPackgeCollection *dpc in _dpcTransporting) {
+        fprintf(route_record_log, "dpc carries %ld dp with %lf MB data\n", dpc.dataPackageCollection.count, dpc.size);
+        for (SNSSatelliteGraphicDataPackage *dp in dpc.dataPackageCollection) {
+            fprintf(route_record_log, "task-%d execution at time %lf produced %lf MB data\n", dp.taskExecution.uniqueID, dp.taskExecution.imageAction.startTime, dp.size);
+        }
+        
+        fprintf(route_record_log, "route log %ld\n", dpc.routeRecords.count);
+        for (SNSRouteRecord *record in dpc.routeRecords) {
+            fprintf(route_record_log , "route %d at time %lf\n", record.routerID, record.timeStamp);
+        }
+        
+        fprintf(route_record_log, "\n");
+    }
+    
+    fclose(route_record_log);
+}
+
 @end

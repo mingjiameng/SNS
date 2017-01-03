@@ -13,14 +13,22 @@
 #import "SNSPlanedDetailDetectTask.h"
 #import "SNSSatelliteGraphicTaskExecution.h"
 #import "SNSSatelliteGraphicDataPackage.h"
+#import "SNSNatureDisaster.h"
 
 @interface SNSTaskDistributionCenter ()
+
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSSGDetailDetectTask *> *taskList;
 @property (atomic) NSInteger taskToAllocate;
+
+@property (nonatomic, strong, nonnull) NSArray<SNSNatureDisaster *> *areaDisaster;
+
 @end
 
 
 @implementation SNSTaskDistributionCenter
+{
+    int _taskExecutionID;
+}
 
 + (instancetype)sharedTaskDistributionCenter
 {
@@ -39,6 +47,7 @@
     self = [super init];
     
     if (self) {
+        _taskExecutionID = 1;
         [self readInDetailDetectTaskFile];
     }
     
@@ -59,7 +68,7 @@
     double area_length;
     int expected_visit_count;
     
-    NSUInteger task_unique_id = 0;
+    int task_unique_id = 0;
     _taskToAllocate = 0;
     while(fscanf(task_input_txt, "%lf %lf %lf %lf %lf %d %lf %lf %lf %d", &longitude, &latitude, &x, &y, &z, &value, &compression_ratio, &compression_ratio_dis, &area_length, &expected_visit_count) != EOF) {
         SNSEarthPoint *earthPoint = [[SNSEarthPoint alloc] initWithLongitude:longitude andLatitude:latitude];
@@ -81,8 +90,6 @@
     }
     
     fclose(task_input_txt);
-    
-    NSLog(@"%ld task readed", task_unique_id);
 }
 
 - (NSArray<SNSSatelliteGraphicTaskExecution *> *)newTaskExecutionQueueForSatellite:(SNSDetailDetectSatellite *)userSatellite
@@ -207,6 +214,7 @@
         }
         imageAction.expectedTimeCost = 10;
         new_task_execution.imageAction = imageAction;
+        new_task_execution.uniqueID = _taskExecutionID++;
         [valid_task_list addObject:new_task_execution];
         last_schedualed_task_execution = new_task_execution;
     }
@@ -222,7 +230,35 @@
 
 - (SNSSatelliteGraphicDataPackage *)newDpcForSatellite:(SNSUserSatellite *)userSatellite
 {
+    SNSEarthPoint *subpoint = [SNSMath subSatellitePoint:userSatellite atTime:SYSTEM_TIME];
+    SNSSatelliteGraphicTaskExecution *taskExecution = nil;
+    for (SNSNatureDisaster *disaster in self.areaDisaster) {
+        if ([SNSWideScanArea earthPoint:subpoint inArea:disaster.area]) {
+            NSInteger randomDisater = [SNSMath randomIntegerBetween:0 and:525600];
+            if (randomDisater <= disaster.amountPerYear) {
+                NSInteger randomDisaterData = [SNSMath randomIntegerBetween:80 and:200];
+                taskExecution = [[SNSSatelliteGraphicTaskExecution alloc] init];
+                taskExecution.dataProduced = (double)randomDisaterData / 10.0f;
+                SNSSatelliteAction *action = [[SNSSatelliteAction alloc] init];
+                action.startTime = SYSTEM_TIME;
+                action.endTime = SYSTEM_TIME;
+                taskExecution.imageAction = action;
+                
+            }
+            
+            break;
+        }
+    }
     
+    if (taskExecution == nil) {
+        return nil;
+    }
+    
+    SNSSatelliteGraphicDataPackage *dp = [[SNSSatelliteGraphicDataPackage alloc] init];
+    dp.taskExecution = taskExecution;
+    dp.size = taskExecution.dataProduced;
+    
+    return dp;
 }
 
 

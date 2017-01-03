@@ -9,6 +9,7 @@
 #import "SNSGroundStation.h"
 
 #import "SNSSGDataPackgeCollection.h"
+#import "SNSDelaySatelliteAntenna.h"
 
 @interface SNSGroundStation ()
 
@@ -26,7 +27,14 @@
 
 - (BOOL)antenna:(SNSGroundStationAntenna *)antenna confirmConnectionWithAntenna:(SNSAntenna *)anotherAntenna
 {
+    if ([anotherAntenna isKindOfClass:[SNSDelaySatelliteAntenna class]]) {
+        SNSDelaySatelliteAntenna *sideAntenna = (SNSDelaySatelliteAntenna *)anotherAntenna;
+        if (sideAntenna.sideHop.uniqueID == antenna.uniqueID) {
+            return YES;
+        }
+    }
     
+    return NO;
 }
 
 - (void)recordDpcReceive:(SNSSGDataPackgeCollection *)dataPackageCollection

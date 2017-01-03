@@ -15,6 +15,8 @@
 
 @interface SNSDelaySatelliteAntenna ()
 
+@property (nonatomic, nonnull) FILE *dpcFromUserSatelliteLog;
+
 @end
 
 
@@ -63,6 +65,7 @@
             routeRecord.routerID = self.owner.uniqueID;
             [self.dpcReceiving.dpc addRouteRecord:routeRecord];
             [self.delegate antenna:self didReceiveDataPackageCollection:self.dpcReceiving.dpc];
+            [self recordDpcReceivingFromUserSatellite:self.dpcSending];
             self.dpcReceiving = nil;
         }
         else if (self.dpcReceiving.state == SNSSGDPCTTaskExecutionStateConfirming) {
@@ -83,6 +86,24 @@
     }
 }
 
+- (void)recordDpcReceivingFromUserSatellite:(SNSSGDPCTTaskExecution *)dpct
+{
+    if (dpct.dpc.routeRecords.count == 2) {
+        fprintf(self.dpcFromUserSatelliteLog, "antenna-%d of satellite-%d receive dpc from user satellite spent %lf time", self.uniqueID, self.owner.uniqueID, dpct.transportAction.expectedTimeCost);
+    }
+}
+
+- (FILE *)dpcFromUserSatelliteLog
+{
+    if (_dpcFromUserSatelliteLog == NULL) {
+        NSString *path = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/satellite%d_antenna%d_dpc_from_user_satellite.txt", self.owner.uniqueID, self.uniqueID];
+        _dpcFromUserSatelliteLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
+        assert(_dpcFromUserSatelliteLog != NULL);
+    }
+    
+    return _dpcFromUserSatelliteLog;
+}
+
 - (SNSSatelliteTime)timeCostToUndertakenDataTransmissionTask:(SNSSGDPCTTaskExecution *)dataTransmissionTask
 {
     SNSSatelliteTime time = SYSTEM_TIME;
@@ -90,7 +111,7 @@
     SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:fromAntenna.owner andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
     
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
-    if (expectedEndTime + 300 >= visibleTimeRange.beginAt + visibleTimeRange.length) {
+    if (expectedEndTime + SATELLITE_ANTENNA_MOBILITY >= visibleTimeRange.beginAt + visibleTimeRange.length) {
         return -1;
     }
     
@@ -104,7 +125,7 @@
     SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:fromAntenna.owner andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
     
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
-    expectedEndTime += 300;
+    expectedEndTime += SATELLITE_ANTENNA_MOBILITY;
     if (expectedEndTime > visibleTimeRange.beginAt + visibleTimeRange.length) {
         return NO;
     }
