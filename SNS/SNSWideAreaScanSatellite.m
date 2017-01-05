@@ -41,7 +41,7 @@
         --_disasterDetectAlarmClock;
     }
     
-    SNSSatelliteGraphicDataPackage *dp = [self.taskQueueDataSource newDpcForSatellite:self];
+    SNSSatelliteGraphicDataPackage *dp = [self.taskQueueDataSource newDisasterDpcForSatellite:self];
     if (dp != nil) {
         [self.dataPackageBufferedQueue addDataPackage:dp];
         self.bufferedDataSize += dp.size;
@@ -69,9 +69,9 @@
         [sendingAntenna continueAction];
     }
     else if (self.dataPackageBufferedQueue.bufferedFlowSize > EPS_ZERO) {
-        SNSSGDPCTTaskExecution *dpct = [self.flowTransportDelegate schedualDataTransmissionForSatellite:self];
+        SNSSGDPCTTaskExecution *dpct = [self.flowTransportDelegate schedualDataTransmissionForSatellite:self withSendingAntenna:sendingAntenna];
         if (dpct != nil) {
-            [self.dataPackageBufferedQueue removeDataPackage:dpct.dpc.dataPackageCollection];
+            [self.dataPackageBufferedQueue removeDataPackageIn:dpct.dpc.dataPackageCollection];
             [sendingAntenna schedualSendingTransmissionTask:dpct];
         }
     }

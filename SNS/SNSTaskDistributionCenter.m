@@ -20,7 +20,7 @@
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSSGDetailDetectTask *> *taskList;
 @property (atomic) NSInteger taskToAllocate;
 
-@property (nonatomic, strong, nonnull) NSArray<SNSNatureDisaster *> *areaDisaster;
+@property (nonatomic, strong, nonnull) NSMutableArray<SNSNatureDisaster *> *areaDisaster;
 
 @end
 
@@ -49,6 +49,7 @@
     if (self) {
         _taskExecutionID = 1;
         [self readInDetailDetectTaskFile];
+        [self readInWideAreaScanTaskFile];
     }
     
     return self;
@@ -87,6 +88,33 @@
         task.expectedExecutedCount = expected_visit_count;
         _taskToAllocate += expected_visit_count;
         [_taskList addObject:task];
+    }
+    
+    fclose(task_input_txt);
+}
+
+- (void)readInWideAreaScanTaskFile
+{
+    NSString *path = [FILE_INPUT_PATH_PREFIX_STRING stringByAppendingString:@"global_disaster_frequency.txt"];
+    FILE *task_input_txt = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
+    assert(task_input_txt != NULL);
+    
+    _areaDisaster = [[NSMutableArray alloc] init];
+    
+    char areaName[40];
+    double left, right, bottom, up;
+    int frequency;
+    while(fscanf(task_input_txt, "%s%d%lf%lf%lf%lf\n", areaName, &frequency, &left, &right, &bottom, &up) != EOF) {
+        SNSWideScanArea *area = [[SNSWideScanArea alloc] init];
+        area.left = left;
+        area.right = right;
+        area.bottom = bottom;
+        area.up = up;
+        SNSNatureDisaster *disaster = [[SNSNatureDisaster alloc] init];
+        disaster.area = area;
+        disaster.amountPerYear = frequency;
+        disaster.uniqueID = _taskExecutionID++;
+        [_areaDisaster addObject:disaster];
     }
     
     fclose(task_input_txt);
@@ -200,7 +228,7 @@
         if (last_schedualed_task_execution == nil) {
             
         }
-        else if (the_planed_task.visibleTimeRange.beginAt + the_planed_task.visibleTimeRange.length - 300 < last_schedualed_task_execution.imageAction.ExpectedStartTime) {
+        else if (the_planed_task.visibleTimeRange.beginAt + the_planed_task.visibleTimeRange.length - SATELLITE_IMAGING_MOBILITY < last_schedualed_task_execution.imageAction.ExpectedStartTime) {
                 continue;
         }
         
@@ -210,7 +238,7 @@
         SNSSatelliteAction *imageAction = [[SNSSatelliteAction alloc] init];
         imageAction.ExpectedStartTime = the_planed_task.visibleTimeRange.beginAt;
         if (last_schedualed_task_execution != nil) {
-            imageAction.ExpectedStartTime = MAX(last_schedualed_task_execution.imageAction.ExpectedStartTime + 300, the_planed_task.visibleTimeRange.beginAt);
+            imageAction.ExpectedStartTime = MAX(last_schedualed_task_execution.imageAction.ExpectedStartTime + SATELLITE_IMAGING_MOBILITY, the_planed_task.visibleTimeRange.beginAt);
         }
         imageAction.expectedTimeCost = 10;
         new_task_execution.imageAction = imageAction;
@@ -241,9 +269,9 @@
                 taskExecution.dataProduced = (double)randomDisaterData / 10.0f;
                 SNSSatelliteAction *action = [[SNSSatelliteAction alloc] init];
                 action.startTime = SYSTEM_TIME;
+                action.expectedTimeCost = 1.0;
                 action.endTime = SYSTEM_TIME;
                 taskExecution.imageAction = action;
-                
             }
             
             break;

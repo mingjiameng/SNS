@@ -60,6 +60,8 @@
 
 - (void)sendDataBehavior
 {
+    [super sendDataBehavior];
+    
     SNSUserSatelliteAntenna *sendingAntenna = nil;
     for (SNSUserSatelliteAntenna *antenna in self.antennas) {
         if (antenna.functionType == SNSAntennaFunctionTypeSendData) {
@@ -77,9 +79,9 @@
         [sendingAntenna continueAction];
     }
     else if (self.dataPackageBufferedQueue.bufferedFlowSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
-        SNSSGDPCTTaskExecution *dpct = [self.flowTransportDelegate schedualDataTransmissionForSatellite:self];
+        SNSSGDPCTTaskExecution *dpct = [self.flowTransportDelegate schedualDataTransmissionForSatellite:self withSendingAntenna:sendingAntenna];
         if (dpct != nil) {
-            [self.dataPackageBufferedQueue removeDataPackage:dpct.dpc.dataPackageCollection];
+            [self.dataPackageBufferedQueue removeDataPackageIn:dpct.dpc.dataPackageCollection];
             [sendingAntenna schedualSendingTransmissionTask:dpct];
         }
     }

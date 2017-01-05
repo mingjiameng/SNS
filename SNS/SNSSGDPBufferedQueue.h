@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 
 #import "SNSSatelliteGraphicDataPackage.h"
-#import "SNSSatelliteGraphicDataPackage.h"
+
+@class SNSSGDataPackgeCollection;
 
 @interface SNSSGDPBufferedQueue : NSObject
 
@@ -20,7 +21,8 @@
 - (void)insertDataPackage:(nonnull NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackage;
 - (void)addDataPackage:(nonnull SNSSatelliteGraphicDataPackage *)dataPackage;
 //- (nonnull NSArray<SNSSatelliteGraphicDataPackage *> *)productDataPackageCollection;
-- (void)removeDataPackage:(nonnull NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackages;
-
+- (void)removeDataPackageIn:(nonnull NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackages;
+- (SNSNetworkFlowSize)dataCanBePackagedWithInLimit:(SNSNetworkFlowSize)flowLimit;
+- (nonnull SNSSGDataPackgeCollection *)produceDpcWithInLimit:(SNSNetworkFlowSize)flowLimit;
 
 @end

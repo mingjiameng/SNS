@@ -92,7 +92,7 @@
     bool inRange = false;
     SNSSatelliteTime st = -1;
     SNSSatelliteTime et = -1;
-    SNSRadian visibleRange = M_PI / 6;
+    SNSRadian visibleRange = DETAIL_DETECT_SATELLITE_VISIBLE_RANGE;
     for (SNSSatelliteTime t = ts; t <= te; t += 5.0) {
         tmpSubpoint = [SNSMath subSatellitePoint:satellite atTime:t];
         inRange = ([self radianDistanceBetweenEarthPointA:tmpSubpoint andB:hotArea.earthPoint] < visibleRange);
@@ -164,7 +164,7 @@
 
 + (SNSSpacePoint *)spacePointOfSatellite:(SNSSatellite *)satellite atTime:(SNSSatelliteTime)time
 {
-    SNSRadian theta = [self thetaOfSatellite:satellite AtTime:time];
+    SNSRadian theta = [SNSMath thetaOfSatellite:satellite atTime:time];
     double cosOmega = cos(satellite.orbit.raan);
     double sinOmega = sin(satellite.orbit.raan);
     double cosI = cos(satellite.orbit.oi);

@@ -52,7 +52,7 @@
     if (_dataProduced < 0) {
         double pixels = self.executor.scanWidth * self.task.hotArea.areaLength / (self.executor.resolution * self.executor.resolution);
         double dataInMb = pixels * 3 / 1048576;
-        dataInMb += 800.0f; // 800MB的数据量是提前开机和拖后关机共4s产生的数据量
+        //dataInMb += 800.0f; // 800MB的数据量是提前开机和拖后关机共4s产生的数据量
         
         NSUInteger ratioDisFactor = [SNSMath randomIntegerBetween:0 and:(NSUInteger)ceil(self.task.hotArea.areaGraphicCompressionRatioDis * 100)];
         double ratioDis = (double)ratioDisFactor / 100.0;
@@ -73,12 +73,6 @@
         
         _dataProduced = dataInMb / ratio;
     }
-    
-//#ifdef DEBUG
-//    if (self.executor.uniqueID == 30) {
-//    NSLog(@"produce data %lf MB", _dataProduced);
-//    }
-//#endif
     
     return _dataProduced;
 }

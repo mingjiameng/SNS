@@ -18,7 +18,7 @@
 
 @protocol SNSUserSatelliteFlowTransportDelegate <NSObject> // 流量传输代理
 @optional
-- (nullable SNSSGDPCTTaskExecution *)schedualDataTransmissionForSatellite:(nonnull SNSUserSatellite *)userSatellite;
+- (nullable SNSSGDPCTTaskExecution *)schedualDataTransmissionForSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSUserSatelliteAntenna *)sendingAntenna;
 - (void)satellite:(nonnull SNSUserSatellite *)userSatellite didSendPackageCollection:(nonnull SNSSGDataPackgeCollection *)dpc;
 
 @end
@@ -30,7 +30,7 @@
 - (nonnull NSArray<SNSSatelliteGraphicTaskExecution *> *)newTaskExecutionQueueForSatellite:(nonnull SNSUserSatellite *)userSatellite;
 
 // 普查星DPC数据源
-- (nullable SNSSatelliteGraphicDataPackage *)newDpcForSatellite:(nonnull SNSUserSatellite *)userSatellite;
+- (nullable SNSSatelliteGraphicDataPackage *)newDisasterDpcForSatellite:(nonnull SNSUserSatellite *)userSatellite;
 
 @end
 
@@ -51,5 +51,8 @@
 
 - (void)executeTaskBehavior;
 - (void)sendDataBehavior;
+
+- (SNSNetworkFlowSize)dataCanBeSendedInTime:(SNSSatelliteTime)time;
+- (nullable SNSSGDataPackgeCollection *)produceDpcCanBeSendedInTime:(SNSSatelliteTime)time;
 
 @end

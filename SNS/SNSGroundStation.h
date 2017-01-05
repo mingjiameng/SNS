@@ -14,4 +14,6 @@
 
 @property (nonatomic) SNSGroundStationTag uniqueID;
 
+@property (nonatomic, strong, nonnull) NSArray<SNSGroundStationAntenna *> *antennas;
+
 @end

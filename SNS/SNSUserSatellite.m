@@ -54,7 +54,7 @@
 
 - (void)recordTaskExecution:(SNSSatelliteGraphicTaskExecution *)taskExecuted
 {
-    NSString *log = [NSString stringWithFormat:@"satellite-%d execute task-%ld and produced %lf MB data at time %lf", self.uniqueID, taskExecuted.task.uniqueID, taskExecuted.dataProduced, SYSTEM_TIME];
+    NSString *log = [NSString stringWithFormat:@"satellite-%d execute task-%d and produced %lf MB data at time %lf", self.uniqueID, taskExecuted.task.uniqueID, taskExecuted.dataProduced, SYSTEM_TIME];
     fprintf(self.taskExecutionLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
@@ -73,7 +73,7 @@
     [self recordSendingData:dataPackageCollection];
 }
 
-- (void)antenna:(SNSSatelliteAntenna *)antenna failToSendDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
+- (void)antenna:(SNSSatelliteAntenna *)antenna didFailToSendDataPackageCollection:(nonnull SNSSGDataPackgeCollection *)dataPackageCollection
 {
     [self.dataPackageBufferedQueue insertDataPackage:dataPackageCollection.dataPackageCollection];
 }
@@ -85,6 +85,42 @@
     }
     
     return _dataPackageBufferedQueue;
+}
+
+- (SNSNetworkFlowSize)dataCanBeSendedInTime:(SNSSatelliteTime)time
+{
+    SNSUserSatelliteAntenna *sendingAntenna = nil;
+    for (SNSUserSatelliteAntenna *antenna in self.antennas) {
+        if (antenna.functionType == SNSAntennaFunctionTypeSendData) {
+            sendingAntenna = antenna;
+            break;
+        }
+    }
+    
+    if (sendingAntenna == nil) {
+        return -1;
+    }
+    
+    SNSNetworkFlowSize limitedFlowSize = time * sendingAntenna.bandWidth;
+    return [self.dataPackageBufferedQueue dataCanBePackagedWithInLimit:limitedFlowSize];
+}
+
+- (SNSSGDataPackgeCollection *)produceDpcCanBeSendedInTime:(SNSSatelliteTime)time
+{
+    SNSUserSatelliteAntenna *sendingAntenna = nil;
+    for (SNSUserSatelliteAntenna *antenna in self.antennas) {
+        if (antenna.functionType == SNSAntennaFunctionTypeSendData) {
+            sendingAntenna = antenna;
+            break;
+        }
+    }
+    
+    if (sendingAntenna == nil) {
+        return nil;
+    }
+    
+    SNSNetworkFlowSize limitedFlowSize = time * sendingAntenna.bandWidth;
+    return [self.dataPackageBufferedQueue produceDpcWithInLimit:limitedFlowSize];
 }
 
 - (void)stop

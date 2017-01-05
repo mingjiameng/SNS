@@ -12,6 +12,8 @@
 
 @class SNSDelaySatelliteAntenna;
 @class SNSSGDPCTTaskExecutionQueue;
+@class SNSSGDPCTTaskExecution;
+@class SNSUserSatellite;
 
 @protocol SNSDelaySatelliteAntennaDelegate <SNSAntennaDelegate>
 @required
@@ -45,5 +47,8 @@
 
 // 中继星将收到的DPC放入发送队列中
 - (void)addSendingTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)dpctTaskExecution;
+
+- (double)costPerformanceToSchedualTransmissionForUserSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSAntenna *)sendingAntenna;
+- (nonnull SNSSGDPCTTaskExecution *)schedualTransmissionForUserSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSAntenna *)sendingAntenna;
 
 @end

@@ -14,5 +14,7 @@
 
 #import "MICRO_SATELLITE.h"
 #import "SNSCoreCenter.h"
+#import "FILE_MICRO.h"
+
 
 #endif /* PrefixHeader_pch */

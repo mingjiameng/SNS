@@ -8,6 +8,8 @@
 
 #import "SNSSGDPBufferedQueue.h"
 
+#import "SNSSGDataPackgeCollection.h"
+
 @interface SNSSGDPBufferedQueue ()
 
 @property (nonatomic) SNSNetworkFlowSize bufferedFlowSize;
@@ -47,7 +49,7 @@
     return dpCollection;
 }
 
-- (void)removeDataPackage:(NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackages
+- (void)removeDataPackageIn:(NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackages
 {
     NSUInteger index;
     SNSSatelliteGraphicDataPackage *dp_to_remove = nil;
@@ -71,6 +73,45 @@
     for (SNSSatelliteGraphicDataPackage *dp in dataPackage) {
         [self.bufferedDataPackages insertObject:dp atIndex:0];
     }
+}
+
+- (SNSNetworkFlowSize)dataCanBePackagedWithInLimit:(SNSNetworkFlowSize)flowLimit
+{
+    SNSNetworkFlowSize size = 0;
+    SNSNetworkFlowSize toBeSize = 0;
+    for (SNSSatelliteGraphicDataPackage *dp in self.bufferedDataPackages) {
+        toBeSize = size + dp.size;
+        if (toBeSize < flowLimit && toBeSize < MAXIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
+            size = toBeSize;
+        }
+        else {
+            break;
+        }
+    }
+    
+    return size;
+}
+
+- (nonnull SNSSGDataPackgeCollection *)produceDpcWithInLimit:(SNSNetworkFlowSize)flowLimit
+{
+    SNSNetworkFlowSize size = 0;
+    SNSNetworkFlowSize toBeSize = 0;
+    NSMutableArray *dps = [[NSMutableArray alloc] init];
+    for (SNSSatelliteGraphicDataPackage *dp in self.bufferedDataPackages) {
+        toBeSize = size + dp.size;
+        if (toBeSize < flowLimit && toBeSize < MAXIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
+            size = toBeSize;
+            [dps addObject:dp];
+        }
+        else {
+            break;
+        }
+    }
+    
+    SNSSGDataPackgeCollection *dpc = [[SNSSGDataPackgeCollection alloc] init];
+    dpc.dataPackageCollection = dps;
+    
+    return dpc;
 }
 
 @end

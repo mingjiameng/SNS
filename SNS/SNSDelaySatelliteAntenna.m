@@ -96,7 +96,7 @@
 - (FILE *)dpcFromUserSatelliteLog
 {
     if (_dpcFromUserSatelliteLog == NULL) {
-        NSString *path = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/satellite%d_antenna%d_dpc_from_user_satellite.txt", self.owner.uniqueID, self.uniqueID];
+        NSString *path = [NSString stringWithFormat:@"%@satellite%d_antenna%d_dpc_from_user_satellite.txt",FILE_OUTPUT_PATH_PREFIX_STRING, self.owner.uniqueID, self.uniqueID];
         _dpcFromUserSatelliteLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         assert(_dpcFromUserSatelliteLog != NULL);
     }
@@ -116,6 +116,60 @@
     }
     
     return MAX(0, visibleTimeRange.beginAt - expectedEndTime);
+}
+
+- (double)costPerformanceToSchedualTransmissionForUserSatellite:(SNSUserSatellite *)userSatellite withSendingAntenna:(SNSAntenna *)sendingAntenna
+{
+    SNSSatelliteTime time = SYSTEM_TIME;
+    SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:userSatellite andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
+    SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
+    
+    // 可用时间达不到最小数据包传输时长要求
+    SNSSatelliteTime minimumDataTransmissionTime = MINIMUM_DATA_PACKAGE_COLLECTION_SIZE / sendingAntenna.bandWidth;
+    SNSSatelliteTime usableTime = visibleTimeRange.beginAt + visibleTimeRange.length - expectedEndTime + SATELLITE_ANTENNA_MOBILITY;
+    if (usableTime <= minimumDataTransmissionTime) {
+        return -1;
+    }
+    
+    double costPerformance = -1.0f;
+    // 可用时间大于所有数据传送需要的时间
+    SNSSatelliteTime maximumDataTransmissionTime = userSatellite.bufferedDataSize / sendingAntenna.bandWidth;
+    if (usableTime >= maximumDataTransmissionTime) {
+        costPerformance = maximumDataTransmissionTime / (maximumDataTransmissionTime + SATELLITE_ANTENNA_MOBILITY);
+    }
+    else {
+        double dataCanBeSended = [userSatellite dataCanBeSendedInTime:usableTime];
+        double usedTime = dataCanBeSended / sendingAntenna.bandWidth;
+        costPerformance = usedTime / (usedTime + SATELLITE_ANTENNA_MOBILITY);
+    }
+    
+    return costPerformance;
+}
+
+- (SNSSGDPCTTaskExecution *)schedualTransmissionForUserSatellite:(SNSUserSatellite *)userSatellite withSendingAntenna:(SNSAntenna *)sendingAntenna
+{
+    SNSSatelliteTime time = SYSTEM_TIME;
+    SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:userSatellite andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
+    SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
+    
+    // 可用时间达不到最小数据包传输时长要求
+    SNSSatelliteTime minimumDataTransmissionTime = MINIMUM_DATA_PACKAGE_COLLECTION_SIZE / sendingAntenna.bandWidth;
+    SNSSatelliteTime usableTime = visibleTimeRange.beginAt + visibleTimeRange.length - expectedEndTime + SATELLITE_ANTENNA_MOBILITY;
+    if (usableTime <= minimumDataTransmissionTime) {
+        return nil;
+    }
+    
+    SNSSGDataPackgeCollection *dpc = [userSatellite produceDpcCanBeSendedInTime:usableTime];
+    SNSSatelliteAction *transportAction = [[SNSSatelliteAction alloc] init];
+    transportAction.expectedTimeCost = dpc.size / sendingAntenna.bandWidth;
+    transportAction.ExpectedStartTime = expectedEndTime + SATELLITE_ANTENNA_MOBILITY;
+    SNSSGDPCTTaskExecution *dpct = [[SNSSGDPCTTaskExecution alloc] init];
+    dpct.transportAction = transportAction;
+    dpct.fromAntenna = sendingAntenna;
+    dpct.toAntenna = self;
+    dpct.dpc = dpc;
+    
+    return dpct;
 }
 
 - (BOOL)schedualDataTransmissionTask:(SNSSGDPCTTaskExecution *)dataTransmissionTask

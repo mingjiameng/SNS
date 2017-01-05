@@ -12,6 +12,7 @@
 
 @interface SNSNatureDisaster : NSObject
 
+@property (nonatomic) int uniqueID;
 @property (nonatomic, strong, nonnull) SNSWideScanArea *area;
 @property (nonatomic) int amountPerYear;
 

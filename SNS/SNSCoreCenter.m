@@ -15,7 +15,8 @@
 #import "SNSDelaySatellite.h"
 #import "SNSUserSatelliteAntenna.h"
 #import "SNSDelaySatelliteAntenna.h"
-//#import "SNSGroundStation.h"
+#import "SNSWideAreaScanSatellite.h"
+#import "SNSGroundStation.h"
 
 @interface SNSCoreCenter ()
 
@@ -25,9 +26,10 @@
 @property (nonatomic) SNSSatelliteTime systemTime;
 
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSDetailDetectSatellite *> *detailDetectSatellites;
+@property (nonatomic, strong, nonnull) NSMutableArray<SNSWideAreaScanSatellite *> *wideAreaScanSatellites;
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSDelaySatellite *> *delaySatellites;
-@property (nonatomic, strong, nonnull) NSMutableArray<SNSSatelliteAntenna *> *antennas;
-//@property (nonatomic, strong, nonnull) NSMutableArray<SNSGroundStation *> *groundStations;
+@property (nonatomic, strong, nonnull) NSMutableArray<SNSAntenna *> *antennas;
+@property (nonatomic, strong, nonnull) NSMutableArray<SNSGroundStation *> *groundStations;
 
 @property (nonatomic) FILE *detailDetectSatelliteLog;
 @property (nonatomic) FILE *delaySatelliteLog;
@@ -64,17 +66,51 @@
         
         [self readInUserSatellitesParam];
         [self readInDelaySatellitesParam];
-        _networkManageCenter.delaySatellites = _delaySatellites;
+        [self readInGroundStationParam];
         [self readInNetworkParam];
+        
+        _networkManageCenter.delaySatellites = _delaySatellites;
+        NSMutableArray *userSatellites = [NSMutableArray arrayWithArray:_detailDetectSatellites];
+        [userSatellites addObjectsFromArray:_wideAreaScanSatellites];
+        _networkManageCenter.userSatellites = userSatellites;
+        
+        
     }
     
     return self;
 }
 
+- (void)readInGroundStationParam
+{
+    NSString *path = [FILE_INPUT_PATH_PREFIX_STRING stringByAppendingString:@""];
+    FILE *param = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
+    assert(param != NULL);
+    
+    int n;
+    fscanf(param, "%d", &n);
+    
+    int ground_station_tag, antenna_tag, antenna_type;
+    double antenna_bandwidth;
+    while(n--) {
+        fscanf(param, "%d", &ground_station_tag);
+        fscanf(param, "%d %d %lf", &antenna_tag, &antenna_type, &antenna_bandwidth);
+        SNSGroundStationAntenna *antenna = [[SNSGroundStationAntenna alloc] init];
+        antenna.functionType = antenna_type;
+        antenna.uniqueID = antenna_tag;
+        antenna.bandWidth = antenna_bandwidth;
+        SNSGroundStation *station = [[SNSGroundStation alloc] init];
+        antenna.owner = station;
+        station.antennas = @[antenna];
+        [_antennas addObject:antenna];
+        [_groundStations addObject:station];
+    }
+    
+    fclose(param);
+}
+
 - (void)readInUserSatellitesParam
 {
-    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/detail_detect_satellite_param.txt", "r");
-    assert(param != NULL);
+    NSArray *param_files = @[@"wide_area_scan_satellite_param.txt", @"detail_detect_satellite_param_4.txt"];
     
     int n;
     double raan, aop, oi, sma, e, ta;
@@ -85,47 +121,52 @@
     int antenna_id, antenna_type;
     double antenna_bandWidth;
     
-    fscanf(param, "%d", &n);
-    while (n--) {
-        SNSDetailDetectSatellite *satellite = [[SNSDetailDetectSatellite alloc] init];
-        fscanf(param, "%d", &satellite_id);
-        satellite.uniqueID = satellite_id;
-        fscanf(param, "%lf %lf %lf %lf %lf %lf %d", &raan, &aop, &oi, &sma, &e, &ta, &retrograde);
-        SNSSatelliteOrbit orbit;
-        orbit.raan = raan;
-        orbit.aop = aop;
-        orbit.oi = oi;
-        orbit.sma = sma;
-        orbit.e = e;
-        orbit.ta = ta;
-        satellite.orbit = orbit;
-        orbit.retrograde = retrograde;
-        fscanf(param, "%lf %lf", &resolution, &scan_width);
-        satellite.resolution = resolution;
-        satellite.scanWidth = scan_width;
-        
-        fscanf(param, "%d", &antenna_num);
-        NSMutableArray *antenna_arr = [NSMutableArray arrayWithCapacity:antenna_num];
-        while (antenna_num--) {
-            fscanf(param, "%d %d %lf", &antenna_id, &antenna_type, &antenna_bandWidth);
-            SNSUserSatelliteAntenna *antenna = [[SNSUserSatelliteAntenna alloc] init];
-            antenna.uniqueID = antenna_id;
-            antenna.functionType = antenna_type;
-            antenna.bandWidth = antenna_bandWidth;
-            antenna.owner = satellite;
-            antenna.delegate = satellite;
-            [antenna_arr addObject:antenna];
-            [_antennas addObject:antenna];
+    for (NSString *param_file_name in param_files) {
+        NSString *path = [FILE_INPUT_PATH_PREFIX_STRING stringByAppendingString:param_file_name];
+        FILE *param = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
+        assert(param != NULL);
+        fscanf(param, "%d", &n);
+        while (n--) {
+            SNSDetailDetectSatellite *satellite = [[SNSDetailDetectSatellite alloc] init];
+            fscanf(param, "%d", &satellite_id);
+            satellite.uniqueID = satellite_id;
+            fscanf(param, "%lf %lf %lf %lf %lf %lf %d", &raan, &aop, &oi, &sma, &e, &ta, &retrograde);
+            SNSSatelliteOrbit orbit;
+            orbit.raan = raan;
+            orbit.aop = aop;
+            orbit.oi = oi;
+            orbit.sma = sma;
+            orbit.e = e;
+            orbit.ta = ta;
+            satellite.orbit = orbit;
+            orbit.retrograde = retrograde;
+            fscanf(param, "%lf %lf", &resolution, &scan_width);
+            satellite.resolution = resolution;
+            satellite.scanWidth = scan_width;
+            
+            fscanf(param, "%d", &antenna_num);
+            NSMutableArray *antenna_arr = [NSMutableArray arrayWithCapacity:antenna_num];
+            while (antenna_num--) {
+                fscanf(param, "%d %d %lf", &antenna_id, &antenna_type, &antenna_bandWidth);
+                SNSUserSatelliteAntenna *antenna = [[SNSUserSatelliteAntenna alloc] init];
+                antenna.uniqueID = antenna_id;
+                antenna.functionType = antenna_type;
+                antenna.bandWidth = antenna_bandWidth;
+                antenna.owner = satellite;
+                antenna.delegate = satellite;
+                [antenna_arr addObject:antenna];
+                [_antennas addObject:antenna];
+            }
+            
+            satellite.antennas = antenna_arr;
+            satellite.taskQueueDataSource = _taskDistributionCenter;
+            satellite.flowTransportDelegate = _networkManageCenter;
+            
+            [_detailDetectSatellites addObject:satellite];
         }
         
-        satellite.antennas = antenna_arr;
-        satellite.taskQueueDataSource = _taskDistributionCenter;
-        satellite.flowTransportDelegate = _networkManageCenter;
-        
-        [_detailDetectSatellites addObject:satellite];
+        fclose(param);
     }
-    
-    fclose(param);
 }
 
 - (void)readInDelaySatellitesParam
@@ -239,23 +280,14 @@
     _systemTime = 0;
     dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     while (_systemTime < EXPECTED_SIMULATION_TIME) {
-        if ((NSUInteger)_systemTime % 60 == 0) {
-            for (SNSSatellite *satellite in self.detailDetectSatellites) {
-                fprintf(self.detailDetectSatelliteLog, "%s\n", [[satellite spaceBufferedDataDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
-            }
-            
-            for (SNSSatellite *satellite in self.delaySatellites) {
-                fprintf(self.delaySatelliteLog, "%s\n", [[satellite spaceBufferedDataDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
-            }
-            
-#ifdef DEBUG
-            NSLog(@"record space network flow at %lf", _systemTime);
-#endif
-        }
-        
+        [self.networkManageCenter updateState];
         _systemTime += SIMULATION_TIME_STEP;
         dispatch_sync(globalQueue, ^{
             for (SNSSatellite *satellite in self.detailDetectSatellites) {
+                [satellite updateState];
+            }
+            
+            for (SNSSatellite *satellite in self.wideAreaScanSatellites) {
                 [satellite updateState];
             }
             
@@ -269,11 +301,15 @@
         [satellite stop];
     }
     
+    for (SNSSatellite *satellite in self.wideAreaScanSatellites) {
+        [satellite stop];
+    }
+    
     for (SNSSatellite *satellite in self.delaySatellites) {
         [satellite stop];
     }
     
-    [self.networkManageCenter outputDpcRouteRecord];
+    [self.networkManageCenter stop];
     
     fclose(self.detailDetectSatelliteLog);
     fclose(self.delaySatelliteLog);

@@ -13,13 +13,17 @@
 
 @interface SNSNetworkManageCenter : NSObject <SNSUserSatelliteFlowTransportDelegate>
 
+@property (nonatomic, weak, nullable) NSArray<SNSUserSatellite *> *userSatellites;
 @property (nonatomic, weak, nullable) NSArray<SNSDelaySatellite *> *delaySatellites;
 
 + (nonnull instancetype)sharedNetworkManageCenter;
 
 - (BOOL)schedualDPCTransmission:(nonnull SNSSGDPCTTaskExecution *)dataTransmissionTask forSatellite:(nonnull SNSUserSatellite *)userSatellite;
-- (void)satellite:(SNSUserSatellite *)userSatellite didSendPackageCollection:(SNSSGDataPackgeCollection *)dpc;
+- (void)satellite:(nonnull SNSUserSatellite *)userSatellite didSendPackageCollection:(nonnull SNSSGDataPackgeCollection *)dpc;
+- (nullable SNSSGDPCTTaskExecution *)schedualDataTransmissionForSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSUserSatelliteAntenna *)sendingAntenna;
 
-- (void)outputDpcRouteRecord;
+
+- (void)updateState;
+- (void)stop;
 
 @end
