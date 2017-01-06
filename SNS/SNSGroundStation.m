@@ -46,7 +46,8 @@
 - (FILE *)dpcReceiveLog
 {
     if (_dpcReceiveLog == NULL) {
-        _dpcReceiveLog = fopen("/Users/zkey/Desktop/science/sns_output/ground_station_dpc_receive_log.txt", "w");
+        NSString *path = [NSString stringWithFormat:@"%@ground_station_dpc_receive_log.txt", FILE_OUTPUT_PATH_PREFIX_STRING];
+        _dpcReceiveLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         assert(_dpcReceiveLog != NULL);
     }
     

@@ -57,7 +57,8 @@
 
 - (void)readInDetailDetectTaskFile
 {
-    FILE *task_input_txt = fopen("/Users/zkey/Desktop/science/sns_input/sns_task_source.txt", "r");
+    NSString *path = [NSString stringWithFormat:@"%@sns_task_source.txt", FILE_INPUT_PATH_PREFIX_STRING];
+    FILE *task_input_txt = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
     assert(task_input_txt != NULL);
     
     _taskList = [NSMutableArray arrayWithCapacity:8000];

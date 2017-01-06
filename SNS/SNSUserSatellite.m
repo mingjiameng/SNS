@@ -33,8 +33,8 @@
 - (FILE *)taskExecutionLog
 {
     if (_taskExecutionLog == NULL) {
-        NSString *taskExecutionLogFilePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03d_task_execution_log.txt", self.uniqueID];
-        _taskExecutionLog = fopen([taskExecutionLogFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+        NSString *path = [NSString stringWithFormat:@"%@detail_detect_satellite_%03d_task_execution_log.txt", FILE_OUTPUT_PATH_PREFIX_STRING, self.uniqueID];
+        _taskExecutionLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w+");
         assert(_taskExecutionLog != NULL);
     }
     
@@ -44,8 +44,8 @@
 - (FILE *)dataSendingLog
 {
     if (_dataSendingLog == NULL) {
-        NSString *dataSendingLogFilePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03d_data_sending_log.txt", self.uniqueID];
-        _dataSendingLog = fopen([dataSendingLogFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+        NSString *path = [NSString stringWithFormat:@"%@detail_detect_satellite_%03d_data_sending_log.txt", FILE_OUTPUT_PATH_PREFIX_STRING, self.uniqueID];
+        _dataSendingLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w+");
         assert(_dataSendingLog != NULL);
     }
     

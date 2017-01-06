@@ -82,7 +82,7 @@
 
 - (void)readInGroundStationParam
 {
-    NSString *path = [FILE_INPUT_PATH_PREFIX_STRING stringByAppendingString:@""];
+    NSString *path = [FILE_INPUT_PATH_PREFIX_STRING stringByAppendingString:@"ground_station_param.txt"];
     FILE *param = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
     assert(param != NULL);
     
@@ -110,7 +110,7 @@
 
 - (void)readInUserSatellitesParam
 {
-    NSArray *param_files = @[@"wide_area_scan_satellite_param.txt", @"detail_detect_satellite_param_4.txt"];
+    NSArray *param_files = @[@"wide_area_scan_satellite_param.txt", @"detail_detect_satellite_param.txt"];
     
     int n;
     double raan, aop, oi, sma, e, ta;
@@ -171,7 +171,8 @@
 
 - (void)readInDelaySatellitesParam
 {
-    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/delay_satellite_param.txt", "r");
+    NSString *path = [FILE_INPUT_PATH_PREFIX_STRING stringByAppendingString:@"delay_satellite_param.txt"];
+    FILE *param = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
     assert(param != NULL);
     
     int m;
@@ -220,7 +221,8 @@
 
 - (void)readInNetworkParam
 {
-    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/network_topology_param.txt", "r");
+    NSString *path = [FILE_INPUT_PATH_PREFIX_STRING stringByAppendingString:@"network_topology_param.txt"];
+    FILE *param = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
     assert(param != NULL);
     
     int w;
@@ -234,35 +236,6 @@
         antennaQ.sideHop = antennaP;
     }
 }
-
-//- (void)readInGroundStationParam
-//{
-//    FILE *param = fopen("/Users/zkey/Desktop/science/sns_input/ground_station_param.txt", "r");
-//    assert(param != NULL);
-//    
-//    int n, antenna_type;
-//    int station_unique_id, antenna_unique_id;
-//    double antenna_band_width;
-//    fscanf(param, "%d", &n);
-//    while (n--) {
-//        fscanf(param, "%d", &station_unique_id);
-//        SNSGroundStation *station = [[SNSGroundStation alloc] init];
-//        station.uniqueID = station_unique_id;
-//        
-//        fscanf(param, "%d %d %lf", &antenna_unique_id, &antenna_type, &antenna_band_width);
-//        SNSDelaySatelliteAntenna *antenna = [[SNSDelaySatelliteAntenna alloc] init];
-//        antenna.uniqueID = antenna_unique_id;
-//        antenna.type = antenna_type;
-//        antenna.bandWidth = antenna_band_width;
-//        antenna.delegate = station;
-//        [_antennas addObject:antenna];
-//        
-//        station.antenna = antenna;
-//        [_groundStations addObject:station];
-//    }
-//    
-//    fclose(param);
-//}
 
 - (SNSSatelliteAntenna *)antennaWithID:(SNSAntennaTag)uniqueID
 {
@@ -318,7 +291,8 @@
 - (FILE *)detailDetectSatelliteLog
 {
     if (_detailDetectSatelliteLog == NULL) {
-        _detailDetectSatelliteLog = fopen("/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_buffered_data_log.txt", "w+");
+        NSString *path = [FILE_OUTPUT_PATH_PREFIX_STRING stringByAppendingString:@"detail_detect_satellite_buffered_data_log.txt"];
+        _detailDetectSatelliteLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         assert(_detailDetectSatelliteLog != NULL);
     }
     
@@ -328,7 +302,8 @@
 - (FILE *)delaySatelliteLog
 {
     if (_delaySatelliteLog == NULL) {
-        _delaySatelliteLog = fopen("/Users/zkey/Desktop/science/sns_output/delay_satellite_buffered_data_log.txt", "w+");
+        NSString *path = [FILE_OUTPUT_PATH_PREFIX_STRING stringByAppendingString:@"delay_satellite_buffered_data_log.txt"];
+        _delaySatelliteLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w+");
         assert(_delaySatelliteLog != NULL);
     }
     

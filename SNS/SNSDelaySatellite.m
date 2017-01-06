@@ -106,8 +106,8 @@
 - (FILE *)dataReceiveLog
 {
     if (_dataReceiveLog == NULL) {
-        NSString *filePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/delay_satellite_%03d_data_receive_log.txt", self.uniqueID];
-        _dataReceiveLog = fopen([filePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+        NSString *path = [NSString stringWithFormat:@"%@delay_satellite_%03d_data_receive_log.txt",FILE_OUTPUT_PATH_PREFIX_STRING, self.uniqueID];
+        _dataReceiveLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w+");
         assert(_dataReceiveLog != NULL);
     }
     
@@ -117,8 +117,8 @@
 - (FILE *)dataSendLog
 {
     if (_dataSendLog) {
-        NSString *filePath = [NSString stringWithFormat:@"/Users/zkey/Desktop/science/sns_output/detail_detect_satellite_%03d_task_execution_log.txt", self.uniqueID];
-        _dataSendLog = fopen([filePath cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+        NSString *path = [NSString stringWithFormat:@"%@detail_detect_satellite_%03d_task_execution_log.txt", FILE_OUTPUT_PATH_PREFIX_STRING, self.uniqueID];
+        _dataSendLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w+");
         assert(_dataSendLog != NULL);
     }
     
