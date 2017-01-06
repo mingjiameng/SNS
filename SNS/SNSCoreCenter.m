@@ -30,6 +30,7 @@
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSDelaySatellite *> *delaySatellites;
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSAntenna *> *antennas;
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSGroundStation *> *groundStations;
+@property (nonatomic, strong, nonnull) NSMutableArray<SNSUserSatellite *> *userSatellites;
 
 @property (nonatomic) FILE *detailDetectSatelliteLog;
 @property (nonatomic) FILE *delaySatelliteLog;
@@ -60,9 +61,10 @@
         _networkManageCenter = [SNSNetworkManageCenter sharedNetworkManageCenter];
         
         _detailDetectSatellites = [[NSMutableArray alloc] init];
+        _wideAreaScanSatellites = [[NSMutableArray alloc] init];
         _delaySatellites = [[NSMutableArray alloc] init];
         _antennas = [[NSMutableArray alloc] init];
-        //_groundStations = [[NSMutableArray alloc] init];
+        _groundStations = [[NSMutableArray alloc] init];
         
         [self readInUserSatellitesParam];
         [self readInDelaySatellitesParam];
@@ -70,10 +72,11 @@
         [self readInNetworkParam];
         
         _networkManageCenter.delaySatellites = _delaySatellites;
-        NSMutableArray *userSatellites = [NSMutableArray arrayWithArray:_detailDetectSatellites];
-        [userSatellites addObjectsFromArray:_wideAreaScanSatellites];
-        _networkManageCenter.userSatellites = userSatellites;
-        
+        _userSatellites = [[NSMutableArray alloc] init];
+        [_userSatellites addObjectsFromArray:_detailDetectSatellites];
+        [_userSatellites addObjectsFromArray:_wideAreaScanSatellites];
+        NSLog(@"read in %ld user satellites", _userSatellites.count);
+        _networkManageCenter.userSatellites = _userSatellites;
         
     }
     
@@ -110,7 +113,9 @@
 
 - (void)readInUserSatellitesParam
 {
-    NSArray *param_files = @[@"wide_area_scan_satellite_param.txt", @"detail_detect_satellite_param.txt"];
+    NSString *wide_area_satellite_param_file = @"wide_area_scan_satellite_param.txt";
+    NSString *detail_detect_satellite_param_file = @"detail_detect_satellite_param.txt";
+    NSArray *param_files = @[detail_detect_satellite_param_file, wide_area_satellite_param_file];
     
     int n;
     double raan, aop, oi, sma, e, ta;
@@ -122,13 +127,18 @@
     double antenna_bandWidth;
     
     for (NSString *param_file_name in param_files) {
+        NSMutableArray *_satellites = _detailDetectSatellites;
+        if ([param_file_name isEqualToString:wide_area_satellite_param_file]) {
+            _satellites = _wideAreaScanSatellites;
+        }
         NSString *path = [FILE_INPUT_PATH_PREFIX_STRING stringByAppendingString:param_file_name];
         FILE *param = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
         assert(param != NULL);
         fscanf(param, "%d", &n);
         while (n--) {
-            SNSDetailDetectSatellite *satellite = [[SNSDetailDetectSatellite alloc] init];
+            SNSUserSatellite *satellite = [self newUserSatelliteWithParamFileName:param_file_name];
             fscanf(param, "%d", &satellite_id);
+            //NSLog(@"satellite_id %d", satellite_id);
             satellite.uniqueID = satellite_id;
             fscanf(param, "%lf %lf %lf %lf %lf %lf %d", &raan, &aop, &oi, &sma, &e, &ta, &retrograde);
             SNSSatelliteOrbit orbit;
@@ -145,6 +155,7 @@
             satellite.scanWidth = scan_width;
             
             fscanf(param, "%d", &antenna_num);
+            //NSLog(@"antenna_num %d", antenna_num);
             NSMutableArray *antenna_arr = [NSMutableArray arrayWithCapacity:antenna_num];
             while (antenna_num--) {
                 fscanf(param, "%d %d %lf", &antenna_id, &antenna_type, &antenna_bandWidth);
@@ -162,11 +173,25 @@
             satellite.taskQueueDataSource = _taskDistributionCenter;
             satellite.flowTransportDelegate = _networkManageCenter;
             
-            [_detailDetectSatellites addObject:satellite];
+            [_satellites addObject:satellite];
         }
+        
+        NSLog(@"read in %ld user satellites", _satellites.count);
         
         fclose(param);
     }
+}
+
+- (SNSUserSatellite *)newUserSatelliteWithParamFileName:(NSString *)fileName
+{
+    if ([fileName containsString:@"detail_detect"]) {
+        return [[SNSDetailDetectSatellite alloc] init];
+    }
+    else {
+        return [[SNSWideAreaScanSatellite alloc] init];
+    }
+    
+    return nil;
 }
 
 - (void)readInDelaySatellitesParam
@@ -211,10 +236,11 @@
             [antenna_arr addObject:antenna];
             [_antennas addObject:antenna];
         }
-        //fscanf(param, "\n");
+
         satellite.antennas = antenna_arr;
         [_delaySatellites addObject:satellite];
     }
+    
     
     fclose(param);
 }
@@ -303,7 +329,7 @@
 {
     if (_delaySatelliteLog == NULL) {
         NSString *path = [FILE_OUTPUT_PATH_PREFIX_STRING stringByAppendingString:@"delay_satellite_buffered_data_log.txt"];
-        _delaySatelliteLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+        _delaySatelliteLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         assert(_delaySatelliteLog != NULL);
     }
     

@@ -53,7 +53,7 @@
 {
     NSUInteger index;
     SNSSatelliteGraphicDataPackage *dp_to_remove = nil;
-    for (SNSSatelliteGraphicDataPackage *dp in self.bufferedDataPackages) {
+    for (SNSSatelliteGraphicDataPackage *dp in dataPackages) {
         for (index = 0; index < self.bufferedDataPackages.count; ++index) {
             dp_to_remove = [self.bufferedDataPackages objectAtIndex:index];
             if (dp_to_remove.uniqueID == dp.uniqueID) {
@@ -65,7 +65,6 @@
             [self.bufferedDataPackages removeObjectAtIndex:index];
         }
     }
-    
 }
 
 - (void)insertDataPackage:(NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackage

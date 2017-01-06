@@ -34,6 +34,8 @@
         }
     }
     
+    NSLog(@"ground station fail to confirm connection");
+    
     return NO;
 }
 

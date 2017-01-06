@@ -107,6 +107,7 @@
     int frequency;
     while(fscanf(task_input_txt, "%s%d%lf%lf%lf%lf\n", areaName, &frequency, &left, &right, &bottom, &up) != EOF) {
         SNSWideScanArea *area = [[SNSWideScanArea alloc] init];
+        area.name = [NSString stringWithCString:areaName encoding:NSUTF8StringEncoding];
         area.left = left;
         area.right = right;
         area.bottom = bottom;
@@ -257,7 +258,7 @@
     return valid_task_list;
 }
 
-- (SNSSatelliteGraphicDataPackage *)newDpcForSatellite:(SNSUserSatellite *)userSatellite
+- (SNSSatelliteGraphicDataPackage *)newDisasterDpcForSatellite:(SNSUserSatellite *)userSatellite
 {
     SNSEarthPoint *subpoint = [SNSMath subSatellitePoint:userSatellite atTime:SYSTEM_TIME];
     SNSSatelliteGraphicTaskExecution *taskExecution = nil;
@@ -265,7 +266,7 @@
         if ([SNSWideScanArea earthPoint:subpoint inArea:disaster.area]) {
             NSInteger randomDisater = [SNSMath randomIntegerBetween:0 and:525600];
             if (randomDisater <= disaster.amountPerYear) {
-                NSInteger randomDisaterData = [SNSMath randomIntegerBetween:80 and:200];
+                NSInteger randomDisaterData = [SNSMath randomIntegerBetween:80000 and:200000];
                 taskExecution = [[SNSSatelliteGraphicTaskExecution alloc] init];
                 taskExecution.dataProduced = (double)randomDisaterData / 10.0f;
                 SNSSatelliteAction *action = [[SNSSatelliteAction alloc] init];

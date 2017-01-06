@@ -42,13 +42,14 @@
 - (SNSSatelliteTime)timeCostToUndertakenDataTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)dataTransmissionTask;
 - (BOOL)schedualDataTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)dataTransmissionTask;
 
+- (double)costPerformanceToSchedualTransmissionForUserSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSAntenna *)sendingAntenna;
+- (nonnull SNSSGDPCTTaskExecution *)schedualTransmissionForUserSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSAntenna *)sendingAntenna;
+
 // 从中继星接收数据
 - (BOOL)schedualDataReceiving:(nonnull SNSSGDPCTTaskExecution *)dataReceivingTask;
 
 // 中继星将收到的DPC放入发送队列中
 - (void)addSendingTransmissionTask:(nonnull SNSSGDPCTTaskExecution *)dpctTaskExecution;
 
-- (double)costPerformanceToSchedualTransmissionForUserSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSAntenna *)sendingAntenna;
-- (nonnull SNSSGDPCTTaskExecution *)schedualTransmissionForUserSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSAntenna *)sendingAntenna;
 
 @end

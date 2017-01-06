@@ -22,6 +22,18 @@
 
 @implementation SNSDelaySatelliteAntenna
 
+- (instancetype)init
+{
+    self = [super init];
+    
+    if (self) {
+        _dpcReceivingTaskQueue = [[SNSSGDPCTTaskExecutionQueue alloc] init];
+        _dpcSendingTaskQueue = [[SNSSGDPCTTaskExecutionQueue alloc] init];
+    }
+    
+    return self;
+}
+
 - (void)sendDataBehavior
 {
     if (self.dpcSending == nil) {
@@ -131,17 +143,9 @@
         return -1;
     }
     
-    double costPerformance = -1.0f;
-    // 可用时间大于所有数据传送需要的时间
-    SNSSatelliteTime maximumDataTransmissionTime = userSatellite.bufferedDataSize / sendingAntenna.bandWidth;
-    if (usableTime >= maximumDataTransmissionTime) {
-        costPerformance = maximumDataTransmissionTime / (maximumDataTransmissionTime + SATELLITE_ANTENNA_MOBILITY);
-    }
-    else {
-        double dataCanBeSended = [userSatellite dataCanBeSendedInTime:usableTime];
-        double usedTime = dataCanBeSended / sendingAntenna.bandWidth;
-        costPerformance = usedTime / (usedTime + SATELLITE_ANTENNA_MOBILITY);
-    }
+    double dataCanBeSended = [userSatellite dataCanBeSendedInTime:usableTime];
+    double usedTime = dataCanBeSended / sendingAntenna.bandWidth;
+    double costPerformance = usedTime / (usedTime + SATELLITE_ANTENNA_MOBILITY);
     
     return costPerformance;
 }
@@ -168,6 +172,9 @@
     dpct.fromAntenna = sendingAntenna;
     dpct.toAntenna = self;
     dpct.dpc = dpc;
+    dpct.state = SNSSGDPCTTaskExecutionStateAdjusting;
+    
+    [self.dpcReceivingTaskQueue addTransmissionTask:dpct];
     
     return dpct;
 }
@@ -202,6 +209,7 @@
     transportAction.ExpectedStartTime = expectedEndTime + 3.0;
     transportAction.expectedTimeCost = dataReceivingTask.dpc.size / dataReceivingTask.fromAntenna.bandWidth;
     dataReceivingTask.transportAction = transportAction;
+    dataReceivingTask.state = SNSSGDPCTTaskExecutionStateQueueing;
     
     [self.dpcReceivingTaskQueue addTransmissionTask:dataReceivingTask];
     

@@ -87,21 +87,23 @@
 // TODO 任务传输规划策略
 - (SNSSGDPCTTaskExecution *)schedualDataTransmissionForSatellite:(SNSUserSatellite *)userSatellite withSendingAntenna:(SNSUserSatelliteAntenna *)sendingAntenna
 {
+    //NSLog(@"receive data transmission schedual request");
+    
     double maximumCostPerformance = 0;
     SNSSatelliteTime costPerformance;
     SNSDelaySatelliteAntenna *theAntenna = nil;
     for (SNSDelaySatellite *delaySatellite in self.delaySatellites) {
         for (SNSDelaySatelliteAntenna *antenna in delaySatellite.antennas) {
             // 天线的功能应该是接受数据，且没有固定的邻接点
+            //NSLog(@"delay antenna id %d", antenna.uniqueID);
             if (antenna.functionType != SNSAntennaFunctionTypeReceiveData || antenna.sideHop != nil) {
                 continue;
             }
             
+            //NSLog(@"usable delay antenna id %d", antenna.uniqueID);
             costPerformance = [antenna costPerformanceToSchedualTransmissionForUserSatellite:userSatellite withSendingAntenna:sendingAntenna];
-            if (costPerformance < 0) {
-                continue;
-            }
-            else if (costPerformance > maximumCostPerformance) {
+            //NSLog(@"cost performance:%lf", costPerformance);
+            if (costPerformance > maximumCostPerformance) {
                 theAntenna = antenna;
                 maximumCostPerformance = costPerformance;
             }
@@ -118,21 +120,30 @@
 
 - (void)updateState
 {
+    [self recordBufferedData];
+}
+
+- (void)recordBufferedData
+{
+    // record buffered data
     if ((NSUInteger)SYSTEM_TIME % 60 == 0) {
         SNSNetworkFlowSize user_satellite_buffered_data_size, delay_satellite_buffered_data_size;
         user_satellite_buffered_data_size = 0;
+        //NSLog(@"buffered flow in %ld user satellites and %ld delay satellites", self.userSatellites.count, self.delaySatellites.count);
         for (SNSSatellite *satellite in self.userSatellites) {
             //fprintf(self.detailDetectSatelliteLog, "%s\n", [[satellite spaceBufferedDataDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
+            //NSLog(@"satellite-%d buffered %lf data at time %lf", satellite.uniqueID, satellite.bufferedDataSize, SYSTEM_TIME);
             user_satellite_buffered_data_size += satellite.bufferedDataSize;
         }
         
-        delay_satellite_buffered_data_size  = 0;
+        delay_satellite_buffered_data_size = 0;
         for (SNSSatellite *satellite in self.delaySatellites) {
             //fprintf(self.delaySatelliteLog, "%s\n", [[satellite spaceBufferedDataDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
             delay_satellite_buffered_data_size += satellite.bufferedDataSize;
+            //NSLog(@"satellite-%d buffered %lf data at time %lf", satellite.uniqueID, satellite.bufferedDataSize, SYSTEM_TIME);
         }
         
-        fprintf(self.bufferedDataLog, "user satellite buffered %lf MB data and delay satellite buffered %lf MB data at time %lf", user_satellite_buffered_data_size, delay_satellite_buffered_data_size, SYSTEM_TIME);
+        fprintf(self.bufferedDataLog, "user satellite buffered %lf MB data and delay satellite buffered %lf MB data at time %lf\n", user_satellite_buffered_data_size, delay_satellite_buffered_data_size, SYSTEM_TIME);
     }
 }
 

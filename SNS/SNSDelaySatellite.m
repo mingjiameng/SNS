@@ -50,6 +50,7 @@
         if (antennaSending.functionType == SNSAntennaFunctionTypeSendData) {
             SNSSGDPCTTaskExecution *dpctTaskExecution = [[SNSSGDPCTTaskExecution alloc] init];
             dpctTaskExecution.dpc = dataPackageCollection;
+            dpctTaskExecution.fromAntenna = antenna;
             [antennaSending addSendingTransmissionTask:dpctTaskExecution];
             break;
         }
@@ -61,19 +62,20 @@
     // 有固定连接
     if ([antenna isKindOfClass:[SNSDelaySatelliteAntenna class]] && [anotherAntenna isKindOfClass:[SNSDelaySatelliteAntenna class]]) {
         SNSDelaySatelliteAntenna *from = (SNSDelaySatelliteAntenna *)anotherAntenna;
-        if (from.sideHop == antenna) {
+        if (from.sideHop.uniqueID == antenna.uniqueID) {
+            return YES;
+        }
+    }
+    else if ([antenna isKindOfClass:[SNSDelaySatelliteAntenna class]] && [anotherAntenna isKindOfClass:[SNSUserSatelliteAntenna class]]) {
+        SNSSatelliteTime time = SYSTEM_TIME;
+        if ([SNSMath isVisibleBeteenBetweenUserSatellite:(SNSUserSatellite *)anotherAntenna.owner andGeoSatellite:(SNSDelaySatellite *)antenna.owner fromTime:time]) {
+            //NSLog(@"success confirm connection between %@ and %@", [antenna class], [anotherAntenna class]);
             return YES;
         }
     }
     
-    // 可视
-    if ([antenna isKindOfClass:[SNSDelaySatelliteAntenna class]] && [anotherAntenna.owner isKindOfClass:[SNSUserSatellite class]]) {
-        SNSSatelliteTime time = SYSTEM_TIME;
-        return [SNSMath isVisibleBeteenBetweenUserSatellite:(SNSUserSatellite *)anotherAntenna.owner andGeoSatellite:(SNSDelaySatellite *)antenna.owner fromTime:time];
-    }
-    
 #ifdef DEBUG
-    NSLog(@"fail to confirm connection");
+    //NSLog(@"fail to confirm connection from %@-%d to %@-%d", [antenna class], antenna.uniqueID, [anotherAntenna class], anotherAntenna.uniqueID);
 #endif
     
     return NO;
@@ -93,21 +95,19 @@
 
 - (void)recordDataSend:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
-    NSString *log = [NSString stringWithFormat:@"satellite-%d send %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
-    fprintf(self.dataSendLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
+    fprintf(self.dataSendLog, "satellite-%d send %lf MB data at time %lf\n", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME);
 }
 
 - (void)recordDataReceive:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
-    NSString *log = [NSString stringWithFormat:@"satellite-%d receive %lf MB data at time %lf", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME];
-    fprintf(self.dataReceiveLog, "%s\n", [log cStringUsingEncoding:NSUTF8StringEncoding]);
+    fprintf(self.dataReceiveLog, "satellite-%d receive %lf MB data at time %lf\n", self.uniqueID, dataPackageCollection.size, SYSTEM_TIME);
 }
 
 - (FILE *)dataReceiveLog
 {
     if (_dataReceiveLog == NULL) {
         NSString *path = [NSString stringWithFormat:@"%@delay_satellite_%03d_data_receive_log.txt",FILE_OUTPUT_PATH_PREFIX_STRING, self.uniqueID];
-        _dataReceiveLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+        _dataReceiveLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         assert(_dataReceiveLog != NULL);
     }
     
@@ -116,9 +116,9 @@
 
 - (FILE *)dataSendLog
 {
-    if (_dataSendLog) {
-        NSString *path = [NSString stringWithFormat:@"%@detail_detect_satellite_%03d_task_execution_log.txt", FILE_OUTPUT_PATH_PREFIX_STRING, self.uniqueID];
-        _dataSendLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w+");
+    if (_dataSendLog == NULL) {
+        NSString *path = [NSString stringWithFormat:@"%@detail_detect_satellite_%03d_data_send_log.txt", FILE_OUTPUT_PATH_PREFIX_STRING, self.uniqueID];
+        _dataSendLog = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         assert(_dataSendLog != NULL);
     }
     

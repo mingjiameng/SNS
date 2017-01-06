@@ -14,6 +14,17 @@
 
 @implementation SNSGroundStationAntenna
 
+- (instancetype)init
+{
+    self = [super init];
+    
+    if (self) {
+        _dpcReceivingTaskQueue = [[SNSSGDPCTTaskExecutionQueue alloc] init];
+    }
+    
+    return self;
+}
+
 - (BOOL)schedualDataReceiving:(SNSSGDPCTTaskExecution *)dataReceivingTask
 {
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];

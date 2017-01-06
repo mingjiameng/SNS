@@ -28,6 +28,8 @@
 
 @property (nonatomic, weak, nullable) id<SNSGroundStationAntennaDelegate> delegate;
 
+@property (nonatomic, weak, nullable) SNSAntenna *sideHop; // 邻接点
+
 // 从中继星接收数据
 - (BOOL)schedualDataReceiving:(nonnull SNSSGDPCTTaskExecution *)dataReceivingTask;
 

@@ -10,6 +10,9 @@
 
 @implementation SNSNatureDisaster
 
-
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"disaster happen at %@ with frequency %d per year", self.area.name, self.amountPerYear];
+}
 
 @end

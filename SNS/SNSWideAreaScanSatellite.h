@@ -12,6 +12,6 @@
 
 @class SNSSGDPBufferedQueue;
 
-@interface SNSWideAreaScanSatellite : SNSUserSatellite <SNSAntennaDelegate>
+@interface SNSWideAreaScanSatellite : SNSUserSatellite
 
 @end

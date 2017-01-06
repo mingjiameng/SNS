@@ -82,6 +82,7 @@
         SNSSGDPCTTaskExecution *dpct = [self.flowTransportDelegate schedualDataTransmissionForSatellite:self withSendingAntenna:sendingAntenna];
         if (dpct != nil) {
             [self.dataPackageBufferedQueue removeDataPackageIn:dpct.dpc.dataPackageCollection];
+            //NSLog(@"satellite-%d buffered %lf data success request connection between %@-%d and %@-%d at time %lf",self.uniqueID, self.bufferedDataSize, [dpct.fromAntenna class], dpct.fromAntenna.uniqueID, [dpct.toAntenna class], dpct.toAntenna.uniqueID, SYSTEM_TIME);
             [sendingAntenna schedualSendingTransmissionTask:dpct];
         }
     }

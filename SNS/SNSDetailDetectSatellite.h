@@ -10,7 +10,4 @@
 
 @interface SNSDetailDetectSatellite : SNSUserSatellite 
 
-@property (nonatomic) SNSResolutionLevel resolution;
-@property (nonatomic) SNSScanWidth scanWidth;
-
 @end

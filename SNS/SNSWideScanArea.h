@@ -12,6 +12,8 @@
 
 @interface SNSWideScanArea : NSObject
 
+@property (nonatomic, strong, nonnull) NSString *name;
+
 @property (nonatomic) double left;
 @property (nonatomic) double right;
 @property (nonatomic) double up;

@@ -43,6 +43,9 @@
 
 @property (nonatomic, strong, nonnull) SNSSGDPBufferedQueue *dataPackageBufferedQueue;
 
+@property (nonatomic) SNSResolutionLevel resolution;
+@property (nonatomic) SNSScanWidth scanWidth;
+
 @property (nonatomic, nonnull) FILE *taskExecutionLog;
 @property (nonatomic, nonnull) FILE *dataSendingLog;
 
