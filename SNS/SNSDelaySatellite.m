@@ -50,7 +50,7 @@
         if (antennaSending.functionType == SNSAntennaFunctionTypeSendData) {
             SNSSGDPCTTaskExecution *dpctTaskExecution = [[SNSSGDPCTTaskExecution alloc] init];
             dpctTaskExecution.dpc = dataPackageCollection;
-            dpctTaskExecution.fromAntenna = antenna;
+            dpctTaskExecution.fromAntenna = antennaSending;
             [antennaSending addSendingTransmissionTask:dpctTaskExecution];
             break;
         }
@@ -65,12 +65,18 @@
         if (from.sideHop.uniqueID == antenna.uniqueID) {
             return YES;
         }
+        else {
+            NSLog(@"fail to confirm connection from %@-%d-%ld to %@-%d-%ld", [antenna class], antenna.uniqueID, antenna.functionType, [anotherAntenna class], anotherAntenna.uniqueID, anotherAntenna.functionType);
+        }
     }
     else if ([antenna isKindOfClass:[SNSDelaySatelliteAntenna class]] && [anotherAntenna isKindOfClass:[SNSUserSatelliteAntenna class]]) {
         SNSSatelliteTime time = SYSTEM_TIME;
         if ([SNSMath isVisibleBeteenBetweenUserSatellite:(SNSUserSatellite *)anotherAntenna.owner andGeoSatellite:(SNSDelaySatellite *)antenna.owner fromTime:time]) {
             //NSLog(@"success confirm connection between %@ and %@", [antenna class], [anotherAntenna class]);
             return YES;
+        }
+        else {
+            //NSLog(@"fail to confirm connection from %@-%d to %@-%d", [antenna class], antenna.uniqueID, [anotherAntenna class], anotherAntenna.uniqueID);
         }
     }
     
@@ -87,6 +93,7 @@
         return [(SNSDelaySatelliteAntenna *)anotherAntenna schedualDataReceiving:dpctTaskExecution];
     }
     else if ([anotherAntenna isKindOfClass:[SNSGroundStationAntenna class]]) {
+        //NSLog(@"schedual connection with ground station");
         return [(SNSGroundStationAntenna *)anotherAntenna schedualDataReceiving:dpctTaskExecution];
     }
     

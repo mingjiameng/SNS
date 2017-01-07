@@ -19,6 +19,6 @@
 @property (nonatomic) double up;
 @property (nonatomic) double bottom;
 
-+ (BOOL)earthPoint:(SNSEarthPoint *)earthPoint inArea:(SNSWideScanArea *)area;
++ (BOOL)earthPoint:(nonnull SNSEarthPoint *)earthPoint inArea:(nonnull SNSWideScanArea *)area;
 
 @end

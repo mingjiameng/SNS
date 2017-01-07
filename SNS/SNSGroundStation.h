@@ -16,4 +16,6 @@
 
 @property (nonatomic, strong, nonnull) NSArray<SNSGroundStationAntenna *> *antennas;
 
+- (void)updateState;
+
 @end

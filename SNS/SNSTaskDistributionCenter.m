@@ -264,7 +264,7 @@
     SNSSatelliteGraphicTaskExecution *taskExecution = nil;
     for (SNSNatureDisaster *disaster in self.areaDisaster) {
         if ([SNSWideScanArea earthPoint:subpoint inArea:disaster.area]) {
-            NSInteger randomDisater = [SNSMath randomIntegerBetween:0 and:525600];
+            NSInteger randomDisater = [SNSMath randomIntegerBetween:1 and:525600];
             if (randomDisater <= disaster.amountPerYear) {
                 NSInteger randomDisaterData = [SNSMath randomIntegerBetween:80000 and:200000];
                 taskExecution = [[SNSSatelliteGraphicTaskExecution alloc] init];

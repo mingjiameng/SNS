@@ -41,6 +41,7 @@
         if (self.dpcSending != nil) {
             self.dpcSending.fromAntenna = self;
             self.dpcSending.toAntenna = self.sideHop;
+            self.dpcSending.state = SNSSGDPCTTaskExecutionStateRequesting;
         }
     }
     else {
@@ -53,7 +54,7 @@
                 self.dpcSending.state = SNSSGDPCTTaskExecutionStateAdjusting;
             }
             else {
-                self.dpcSending.state = SNSSGDPCTTaskExecutionStateQueueing;
+                self.dpcSending.state = SNSSGDPCTTaskExecutionStateRequesting;
             }
         }
         else if (self.dpcSending.state == SNSSGDPCTTaskExecutionStateConnectionFailed) {
@@ -77,7 +78,7 @@
             routeRecord.routerID = self.owner.uniqueID;
             [self.dpcReceiving.dpc addRouteRecord:routeRecord];
             [self.delegate antenna:self didReceiveDataPackageCollection:self.dpcReceiving.dpc];
-            [self recordDpcReceivingFromUserSatellite:self.dpcSending];
+            [self recordDpcReceivingFromUserSatellite:self.dpcReceiving];
             self.dpcReceiving = nil;
         }
         else if (self.dpcReceiving.state == SNSSGDPCTTaskExecutionStateConfirming) {
@@ -101,7 +102,7 @@
 - (void)recordDpcReceivingFromUserSatellite:(SNSSGDPCTTaskExecution *)dpct
 {
     if (dpct.dpc.routeRecords.count == 2) {
-        fprintf(self.dpcFromUserSatelliteLog, "antenna-%d of satellite-%d receive dpc from user satellite spent %lf time", self.uniqueID, self.owner.uniqueID, dpct.transportAction.expectedTimeCost);
+        fprintf(self.dpcFromUserSatelliteLog, "antenna-%d of satellite-%d receive dpc from user satellite spent %lf time\n", self.uniqueID, self.owner.uniqueID, dpct.transportAction.expectedTimeCost);
     }
 }
 
@@ -209,7 +210,6 @@
     transportAction.ExpectedStartTime = expectedEndTime + 3.0;
     transportAction.expectedTimeCost = dataReceivingTask.dpc.size / dataReceivingTask.fromAntenna.bandWidth;
     dataReceivingTask.transportAction = transportAction;
-    dataReceivingTask.state = SNSSGDPCTTaskExecutionStateQueueing;
     
     [self.dpcReceivingTaskQueue addTransmissionTask:dataReceivingTask];
     
@@ -219,6 +219,7 @@
 - (void)addSendingTransmissionTask:(SNSSGDPCTTaskExecution *)dpctTaskExecution
 {
     dpctTaskExecution.state = SNSSGDPCTTaskExecutionStateQueueing;
+    //NSLog(@"antenna-%d in type %ld add dpc sending task", self.uniqueID, self.functionType);
     [self.dpcSendingTaskQueue addTransmissionTask:dpctTaskExecution];
 }
 

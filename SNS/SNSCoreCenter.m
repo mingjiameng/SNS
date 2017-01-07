@@ -102,7 +102,9 @@
         antenna.uniqueID = antenna_tag;
         antenna.bandWidth = antenna_bandwidth;
         SNSGroundStation *station = [[SNSGroundStation alloc] init];
+        station.uniqueID = ground_station_tag;
         antenna.owner = station;
+        antenna.delegate = station;
         station.antennas = @[antenna];
         [_antennas addObject:antenna];
         [_groundStations addObject:station];
@@ -256,20 +258,33 @@
     int p, q; // 由p 到 q的边
     while (w--) {
         fscanf(param, "%d %d", &p, &q);
-        SNSDelaySatelliteAntenna *antennaP = (SNSDelaySatelliteAntenna *)[self antennaWithID:p];
-        SNSDelaySatelliteAntenna *antennaQ = (SNSDelaySatelliteAntenna *)[self antennaWithID:q];
-        antennaP.sideHop = antennaQ;
-        antennaQ.sideHop = antennaP;
+        SNSAntenna *antennaP = [self antennaWithID:p];
+        SNSAntenna *antennaQ = [self antennaWithID:q];
+        if (300 < p && p < 400) {
+            ((SNSDelaySatelliteAntenna *)antennaP).sideHop = antennaQ;
+        }
+        else {
+            ((SNSGroundStationAntenna *)antennaP).sideHop = antennaQ;
+        }
+        
+        if (300 < q && q < 400) {
+            ((SNSDelaySatelliteAntenna *)antennaQ).sideHop = antennaP;
+        }
+        else {
+            ((SNSGroundStationAntenna *)antennaQ).sideHop = antennaP;
+        }
     }
 }
 
-- (SNSSatelliteAntenna *)antennaWithID:(SNSAntennaTag)uniqueID
+- (SNSAntenna *)antennaWithID:(SNSAntennaTag)uniqueID
 {
-    for (SNSSatelliteAntenna *antenna in self.antennas) {
+    for (SNSAntenna *antenna in self.antennas) {
         if (antenna.uniqueID == uniqueID) {
             return antenna;
         }
     }
+    
+    NSLog(@"warning! nil antenna with id %d", uniqueID);
     
     return nil;
 }
@@ -292,6 +307,10 @@
             
             for (SNSSatellite *satellite in self.delaySatellites) {
                 [satellite updateState];
+            }
+            
+            for (SNSGroundStation *station in self.groundStations) {
+                [station updateState];
             }
         });
     }

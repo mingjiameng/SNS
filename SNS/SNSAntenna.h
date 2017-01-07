@@ -24,8 +24,8 @@
 
 typedef NS_ENUM(NSInteger, SNSAntennaFunctionType) {
     SNSAntennaFunctionTypeSendData = 1,
-    SNSAntennaFunctionTypeReceiveData,
-    SNSAntennaFunctionTypeSendAndReceiveData
+    SNSAntennaFunctionTypeReceiveData = 2,
+    SNSAntennaFunctionTypeSendAndReceiveData = 3
 };
 
 @interface SNSAntenna : NSObject

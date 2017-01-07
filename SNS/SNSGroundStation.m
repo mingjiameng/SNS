@@ -20,6 +20,13 @@
 
 @implementation SNSGroundStation
 
+- (void)updateState
+{
+    for (SNSAntenna *antenna in self.antennas) {
+        [antenna continueAction];
+    }
+}
+
 - (void)antenna:(SNSAntenna *)antenna didReceiveDataPackageCollection:(SNSSGDataPackgeCollection *)dataPackageCollection
 {
     [self recordDpcReceive:dataPackageCollection];

@@ -34,6 +34,8 @@
     transportAction.expectedTimeCost = dataReceivingTask.dpc.size / dataReceivingTask.fromAntenna.bandWidth;
     dataReceivingTask.transportAction = transportAction;
     
+    //NSLog(@"ground station antenna schedual transmission at time %lf with length %lf when system is %lf", transportAction.ExpectedStartTime, transportAction.expectedTimeCost, SYSTEM_TIME);
+    
     [self.dpcReceivingTaskQueue addTransmissionTask:dataReceivingTask];
     
     return YES;
@@ -43,8 +45,10 @@
 {
     if (self.dpcReceiving == nil) {
         self.dpcReceiving = [self.dpcReceivingTaskQueue pop];
+        //NSLog(@"ground station begin receive data");
     }
     else {
+        //NSLog(@"ground station dpc receive state %ld", self.dpcReceiving.state);
         if (self.dpcReceiving.state == SNSSGDPCTTaskExecutionStateCompleted) {
             SNSRouteRecord *routeRecord = [[SNSRouteRecord alloc] init];
             routeRecord.timeStamp = SYSTEM_TIME;

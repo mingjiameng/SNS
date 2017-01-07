@@ -169,8 +169,6 @@
 			children = (
 				4413B4A71E0A800300DD7600 /* SNSCoreCenter.h */,
 				4413B4AA1E0A803A00DD7600 /* SNSCoreCenter.m */,
-				441E6D8A1E193BF400198113 /* SNSGroundStation.h */,
-				441E6D8B1E193BF400198113 /* SNSGroundStation.m */,
 				441E6DA31E1D166500198113 /* FILE_MICRO.h */,
 			);
 			name = CoreCenter;
@@ -230,6 +228,8 @@
 				4413B4961E0A2B9200DD7600 /* MICRO_SATELLITE.h */,
 				4413B4991E0A5B6900DD7600 /* SNSDelaySatellite.h */,
 				4413B49A1E0A5B6A00DD7600 /* SNSDelaySatellite.m */,
+				441E6D8A1E193BF400198113 /* SNSGroundStation.h */,
+				441E6D8B1E193BF400198113 /* SNSGroundStation.m */,
 			);
 			name = Satellites;
 			sourceTree = "<group>";
@@ -266,14 +266,14 @@
 		441E6D901E19EFEA00198113 /* Antennas */ = {
 			isa = PBXGroup;
 			children = (
+				441E6D941E1A7DF800198113 /* SNSAntenna.h */,
+				441E6D951E1A7E1200198113 /* SNSAntenna.m */,
 				4413B4AE1E0B5F0E00DD7600 /* SNSSatelliteAntenna.h */,
 				4413B4AF1E0B5F0E00DD7600 /* SNSSatelliteAntenna.m */,
 				4413B4B11E0B6B5400DD7600 /* SNSUserSatelliteAntenna.h */,
 				4413B4B21E0B6B5400DD7600 /* SNSUserSatelliteAntenna.m */,
 				4413B4B41E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.h */,
 				4413B4B51E0B6B8400DD7600 /* SNSDelaySatelliteAntenna.m */,
-				441E6D941E1A7DF800198113 /* SNSAntenna.h */,
-				441E6D951E1A7E1200198113 /* SNSAntenna.m */,
 				441E6D971E1A7E4800198113 /* SNSGroundStationAntenna.h */,
 				441E6D921E1A038800198113 /* SNSGroundStationAntenna.m */,
 			);
