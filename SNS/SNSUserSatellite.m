@@ -70,6 +70,11 @@
     [self.flowTransportDelegate satellite:self didSendPackageCollection:dataPackageCollection];
     
     self.bufferedDataSize -= dataPackageCollection.size;
+    
+//    if (antenna.owner.uniqueID == 1) {
+//        NSLog(@"satellite-%d buffered %lf data after sending data %lf", self.uniqueID, self.bufferedDataSize, dataPackageCollection.size);
+//    }
+    
     [self recordSendingData:dataPackageCollection];
 }
 
@@ -102,7 +107,10 @@
     }
     
     SNSNetworkFlowSize limitedFlowSize = time * sendingAntenna.bandWidth;
-    return [self.dataPackageBufferedQueue dataCanBePackagedWithInLimit:limitedFlowSize];
+    SNSNetworkFlowSize packagedSize = [self.dataPackageBufferedQueue dataCanBePackagedWithInLimit:limitedFlowSize];
+    //NSLog(@"satellite-%d packaged size %lf", self.uniqueID, packagedSize);
+    
+    return packagedSize;
 }
 
 - (SNSSGDataPackgeCollection *)produceDpcCanBeSendedInTime:(SNSSatelliteTime)time

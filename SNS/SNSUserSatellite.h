@@ -20,6 +20,7 @@
 @optional
 - (nullable SNSSGDPCTTaskExecution *)schedualDataTransmissionForSatellite:(nonnull SNSUserSatellite *)userSatellite withSendingAntenna:(nonnull SNSUserSatelliteAntenna *)sendingAntenna;
 - (void)satellite:(nonnull SNSUserSatellite *)userSatellite didSendPackageCollection:(nonnull SNSSGDataPackgeCollection *)dpc;
+- (SNSDataPackageTag)newDpTag;
 
 @end
 

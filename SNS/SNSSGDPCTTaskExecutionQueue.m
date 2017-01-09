@@ -42,6 +42,7 @@
 - (void)addTransmissionTask:(SNSSGDPCTTaskExecution *)task
 {
     [_dpctArray addObject:task];
+    NSLog(@"taskQueueCount:%ld", _dpctArray.count);
 }
 
 - (SNSSatelliteTime)expectedEndTime

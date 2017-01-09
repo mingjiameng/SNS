@@ -26,6 +26,7 @@ typedef int SNSDataPackageTag;
 typedef int SNSRouterHopTag;
 typedef int SNSTaskExecutionTag;
 typedef int SNSGroundStationTag;
+typedef int SNSDataPackageTag;
 
 typedef struct _SNSTimeRange {
     SNSSatelliteTime beginAt;
@@ -43,9 +44,9 @@ typedef struct _SNSTimeRange {
 
 #define SATELLITE_ANTENNA_MOBILITY 180
 #define SATELLITE_IMAGING_MOBILITY 300
-#define EXPECTED_SIMULATION_TIME 86400 // 单位：秒，1d * 24h * 60min * 60sec
-#define SIMULATION_TIME_STEP 1 // 仿真时间步长
-
+#define EXPECTED_SIMULATION_TIME 2592000 // 单位：秒，1d * 24h * 60min * 60sec
+#define SIMULATION_TIME_STEP 1.0 // 仿真时间步长
+#define NETWORK_CONNECTION_REQUIREMENT_TIME_INTERVEL 60.0
 #define DETAIL_DETECT_SATELLITE_VISIBLE_RANGE 0.47831843169
 
 #define EPS_ZERO 1e-10

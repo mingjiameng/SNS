@@ -32,15 +32,33 @@
 
 
 @implementation SNSDetailDetectSatellite
+{
+    SNSSatelliteTime _connectionWaitingTime;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    
+    if (self) {
+        _connectionWaitingTime = 0;
+    }
+    
+    return self;
+}
 
 - (void)executeTaskBehavior
 {
     if (_taskExecuting != nil) {
         if (_taskExecuting.state == SNSSatelliteGraphicTaskExecutionStateCompleted) {
             SNSSatelliteGraphicDataPackage *dataPackage = [[SNSSatelliteGraphicDataPackage alloc] init];
+            dataPackage.uniqueID = [self.flowTransportDelegate newDpTag];
             dataPackage.taskExecution = _taskExecuting;
             [self.dataPackageBufferedQueue addDataPackage:dataPackage];
             self.bufferedDataSize += dataPackage.size;
+//            if (self.uniqueID == 1) {
+//                NSLog(@"satellite-%d buffured data-%lf after execute task-%d", self.uniqueID, self.bufferedDataSize, _taskExecuting.uniqueID);
+//            }
             [self recordTaskExecution:_taskExecuting];
             _taskExecuting = nil;
         }
@@ -78,12 +96,29 @@
     if (sendingAntenna.isSending) {
         [sendingAntenna continueAction];
     }
-    else if (self.dataPackageBufferedQueue.bufferedFlowSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
+    else if (self.bufferedDataSize > MINIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
+//        if (self.uniqueID == 1) {
+//            NSLog(@"satellite-1 require network connection at time %lf", SYSTEM_TIME);
+//        }
         SNSSGDPCTTaskExecution *dpct = [self.flowTransportDelegate schedualDataTransmissionForSatellite:self withSendingAntenna:sendingAntenna];
         if (dpct != nil) {
-            [self.dataPackageBufferedQueue removeDataPackageIn:dpct.dpc.dataPackageCollection];
-            //NSLog(@"satellite-%d buffered %lf data success request connection between %@-%d and %@-%d at time %lf",self.uniqueID, self.bufferedDataSize, [dpct.fromAntenna class], dpct.fromAntenna.uniqueID, [dpct.toAntenna class], dpct.toAntenna.uniqueID, SYSTEM_TIME);
-            [sendingAntenna schedualSendingTransmissionTask:dpct];
+            if (_connectionWaitingTime > 0) {
+                --_connectionWaitingTime;
+            }
+            else {
+                [self.dataPackageBufferedQueue removeDataPackageIn:dpct.dpc.dataPackageCollection];
+                //NSLog(@"satellite-%d buffered %lf data success request connection between %@-%d and %@-%d at time %lf",self.uniqueID, self.bufferedDataSize, [dpct.fromAntenna class], dpct.fromAntenna.uniqueID, [dpct.toAntenna class], dpct.toAntenna.uniqueID, SYSTEM_TIME);
+                [sendingAntenna schedualSendingTransmissionTask:dpct];
+            }
+//            if (self.uniqueID == 1) {
+//                NSLog(@"satellite-1 successfully require network connection at time %lf", SYSTEM_TIME);
+//            }
+        }
+        else {
+            _connectionWaitingTime = NETWORK_CONNECTION_REQUIREMENT_TIME_INTERVEL;
+//            if (self.uniqueID == 1) {
+//                NSLog(@"satellite-1 fail to require network connection at time %lf", SYSTEM_TIME);
+//            }
         }
     }
     

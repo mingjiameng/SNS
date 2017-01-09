@@ -14,6 +14,7 @@
 #import "SNSSatelliteGraphicTaskExecution.h"
 #import "SNSSatelliteGraphicDataPackage.h"
 #import "SNSNatureDisaster.h"
+#import "SNSNetworkManageCenter.h"
 
 @interface SNSTaskDistributionCenter ()
 
@@ -285,6 +286,7 @@
     }
     
     SNSSatelliteGraphicDataPackage *dp = [[SNSSatelliteGraphicDataPackage alloc] init];
+    dp.uniqueID = [[SNSNetworkManageCenter sharedNetworkManageCenter] newDpTag];
     dp.taskExecution = taskExecution;
     dp.size = taskExecution.dataProduced;
     

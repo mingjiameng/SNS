@@ -102,7 +102,7 @@
 - (void)recordDpcReceivingFromUserSatellite:(SNSSGDPCTTaskExecution *)dpct
 {
     if (dpct.dpc.routeRecords.count == 2) {
-        fprintf(self.dpcFromUserSatelliteLog, "antenna-%d of satellite-%d receive dpc from user satellite spent %lf time\n", self.uniqueID, self.owner.uniqueID, dpct.transportAction.expectedTimeCost);
+        fprintf(self.dpcFromUserSatelliteLog, "antenna-%d of satellite-%d receive dpc from user satellite spent %lfs at time %lf\n", self.uniqueID, self.owner.uniqueID, dpct.transportAction.expectedTimeCost, SYSTEM_TIME);
     }
 }
 
@@ -135,8 +135,9 @@
 {
     SNSSatelliteTime time = SYSTEM_TIME;
     SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:userSatellite andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
+    //NSLog(@"sendingAntenna-%d geoAntenna-%d visible time %lf length %lf", sendingAntenna.uniqueID, self.uniqueID, visibleTimeRange.beginAt, visibleTimeRange.length);
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
-    
+    NSLog(@"antenna-%d receiving behaviorExpectedEnd time:%lf & system time:%lf", self.uniqueID, expectedEndTime, time);
     // 可用时间达不到最小数据包传输时长要求
     SNSSatelliteTime minimumDataTransmissionTime = MINIMUM_DATA_PACKAGE_COLLECTION_SIZE / sendingAntenna.bandWidth;
     SNSSatelliteTime usableTime = visibleTimeRange.beginAt + visibleTimeRange.length - expectedEndTime + SATELLITE_ANTENNA_MOBILITY;
@@ -146,7 +147,13 @@
     
     double dataCanBeSended = [userSatellite dataCanBeSendedInTime:usableTime];
     double usedTime = dataCanBeSended / sendingAntenna.bandWidth;
-    double costPerformance = usedTime / (usedTime + SATELLITE_ANTENNA_MOBILITY);
+    SNSSatelliteTime waitingTime = MAX(expectedEndTime + SATELLITE_ANTENNA_MOBILITY, visibleTimeRange.beginAt) - time;
+    if (waitingTime > userSatellite.orbitPeriod) {
+        return -1;
+    }
+    double costPerformance = usedTime / (usedTime + waitingTime);
+    
+    //NSLog(@"antenna-%d expected end time %lf usable time %lf used time:%lf waiting time:%lf cost performance %lf", self.uniqueID, expectedEndTime, usableTime, usedTime, waitingTime, costPerformance);
     
     return costPerformance;
 }
@@ -156,7 +163,6 @@
     SNSSatelliteTime time = SYSTEM_TIME;
     SNSTimeRange visibleTimeRange = [SNSMath nextVisibleTimeRangeBetweenUserSatellite:userSatellite andGeoSatellite:(SNSDelaySatellite *)self.owner fromTime:time];
     SNSSatelliteTime expectedEndTime = [self.dpcReceivingTaskQueue expectedEndTime];
-    
     // 可用时间达不到最小数据包传输时长要求
     SNSSatelliteTime minimumDataTransmissionTime = MINIMUM_DATA_PACKAGE_COLLECTION_SIZE / sendingAntenna.bandWidth;
     SNSSatelliteTime usableTime = visibleTimeRange.beginAt + visibleTimeRange.length - expectedEndTime + SATELLITE_ANTENNA_MOBILITY;
@@ -167,7 +173,7 @@
     SNSSGDataPackgeCollection *dpc = [userSatellite produceDpcCanBeSendedInTime:usableTime];
     SNSSatelliteAction *transportAction = [[SNSSatelliteAction alloc] init];
     transportAction.expectedTimeCost = dpc.size / sendingAntenna.bandWidth;
-    transportAction.ExpectedStartTime = expectedEndTime + SATELLITE_ANTENNA_MOBILITY;
+    transportAction.ExpectedStartTime = MAX(expectedEndTime + SATELLITE_ANTENNA_MOBILITY, visibleTimeRange.beginAt);
     SNSSGDPCTTaskExecution *dpct = [[SNSSGDPCTTaskExecution alloc] init];
     dpct.transportAction = transportAction;
     dpct.fromAntenna = sendingAntenna;

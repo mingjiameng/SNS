@@ -25,8 +25,8 @@
     self = [super init];
     
     if (self) {
-        _bufferedFlowSize = 0;
-        _bufferedDataPackages = [NSMutableArray arrayWithCapacity:10];
+        self.bufferedFlowSize = 0;
+        self.bufferedDataPackages = [NSMutableArray arrayWithCapacity:10];
     }
     
     return self;
@@ -34,20 +34,20 @@
 
 - (void)addDataPackage:(SNSSatelliteGraphicDataPackage *)dataPackage
 {
-    _bufferedFlowSize += dataPackage.size;
-    [_bufferedDataPackages addObject:dataPackage];
+    self.bufferedFlowSize += dataPackage.size;
+    [self.bufferedDataPackages addObject:dataPackage];
 }
 
 
-- (NSArray<SNSSatelliteGraphicDataPackage *> *)productDataPackageCollection
-{
-    NSArray *dpCollection = [NSArray arrayWithArray:_bufferedDataPackages];
-    
-    [_bufferedDataPackages removeAllObjects];
-    _bufferedFlowSize = 0;
-    
-    return dpCollection;
-}
+//- (NSArray<SNSSatelliteGraphicDataPackage *> *)productDataPackageCollection
+//{
+//    NSArray *dpCollection = [NSArray arrayWithArray:_bufferedDataPackages];
+//    
+//    [_bufferedDataPackages removeAllObjects];
+//    _bufferedFlowSize = 0;
+//    
+//    return dpCollection;
+//}
 
 - (void)removeDataPackageIn:(NSArray<SNSSatelliteGraphicDataPackage *> *)dataPackages
 {
@@ -63,6 +63,7 @@
         
         if (index < self.bufferedDataPackages.count) {
             [self.bufferedDataPackages removeObjectAtIndex:index];
+            self.bufferedFlowSize -= dp.size;
         }
     }
 }
@@ -71,6 +72,7 @@
 {
     for (SNSSatelliteGraphicDataPackage *dp in dataPackage) {
         [self.bufferedDataPackages insertObject:dp atIndex:0];
+        self.bufferedFlowSize += dp.size;
     }
 }
 
@@ -78,7 +80,9 @@
 {
     SNSNetworkFlowSize size = 0;
     SNSNetworkFlowSize toBeSize = 0;
-    for (SNSSatelliteGraphicDataPackage *dp in self.bufferedDataPackages) {
+    SNSSatelliteGraphicDataPackage *dp = nil;
+    for (int i = 0; i < self.bufferedDataPackages.count; ++i) {
+        dp = [self.bufferedDataPackages objectAtIndex:i];
         toBeSize = size + dp.size;
         if (toBeSize < flowLimit && toBeSize < MAXIMUM_DATA_PACKAGE_COLLECTION_SIZE) {
             size = toBeSize;
@@ -87,6 +91,8 @@
             break;
         }
     }
+    
+    //NSLog(@"flowLimit:%lf packaged size:%lf from %lf", flowLimit, size, self.bufferedFlowSize);
     
     return size;
 }
@@ -109,6 +115,8 @@
     
     SNSSGDataPackgeCollection *dpc = [[SNSSGDataPackgeCollection alloc] init];
     dpc.dataPackageCollection = dps;
+    
+    self.bufferedFlowSize -= dpc.size;
     
     return dpc;
 }

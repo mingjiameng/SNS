@@ -17,6 +17,7 @@
 #import "SNSDelaySatelliteAntenna.h"
 #import "SNSWideAreaScanSatellite.h"
 #import "SNSGroundStation.h"
+#import "SNSMath.h"
 
 @interface SNSCoreCenter ()
 
@@ -313,6 +314,11 @@
                 [station updateState];
             }
         });
+        
+//        for (SNSSatellite *satellite in self.detailDetectSatellites) {
+//            SNSEarthPoint *point = [SNSMath subSatellitePoint:satellite atTime:_systemTime];
+//            NSLog(@"satellite-%d earth point longi:%lf lati:%lf", satellite.uniqueID, point.longitude, point.latitude);
+//        }
     }
     
     for (SNSSatellite *satellite in self.detailDetectSatellites) {

@@ -19,7 +19,7 @@
 
 + (SNSEarthPoint *)subSatellitePoint:(SNSSatellite *)satellite atTime:(SNSSatelliteTime)time
 {
-    double theta0 = satellite.orbit.ta;
+    double theta0 = satellite.orbit.ta + satellite.orbit.aop;
     double theta = theta0 + satellite.orbitRadianSpeed * time; // 单位：弧度
     //NSLog(@"theta before scale:%lf", theta);
     double theta_scale = floor((theta + M_PI) / (2 * M_PI));
@@ -42,7 +42,9 @@
     double fi = asin(sin(satellite.orbit.oi) * sin(theta));
     fi = fi / M_PI * 180;
     
-    return [[SNSEarthPoint alloc] initWithLongitude:lambda andLatitude:fi];
+    SNSEarthPoint *point = [[SNSEarthPoint alloc] initWithLongitude:lambda andLatitude:fi];
+    
+    return point;
 }
 
 + (SNSSatelliteTime)orbitPeriodOfSatelliteOrbit:(SNSSatelliteOrbit)orbit
@@ -54,7 +56,7 @@
 
 + (SNSRadian)thetaOfSatellite:(SNSSatellite *)satellite atTime:(SNSSatelliteTime)time
 {
-    double theta0 = satellite.orbit.ta;
+    double theta0 = satellite.orbit.ta + satellite.orbit.aop;
     double theta = theta0 + satellite.orbitRadianSpeed * time; // 单位：弧度
     //NSLog(@"theta before scale:%lf", theta);
     double theta_scale = floor((theta + M_PI) / (2 * M_PI));
@@ -128,10 +130,11 @@
     
     SNSAngle longitudeDis = fabs(userSubPoint.longitude - geoSubPoint.longitude);
     if (!userSatellite.orbit.retrograde) {
-        longitudeDis = 360 - longitudeDis;
+        longitudeDis = 360.0 - longitudeDis;
     }
     
-    SNSAngle subPointLongitudeSpeed = 360 / userSatellite.orbitPeriod - EARTH_AUTO_ROTATION_ANGLE_SPEED;    SNSSatelliteTime td = longitudeDis / subPointLongitudeSpeed + time;
+    SNSAngle subPointLongitudeSpeed = 360.0 / userSatellite.orbitPeriod - EARTH_AUTO_ROTATION_ANGLE_SPEED;
+    SNSSatelliteTime td = longitudeDis / subPointLongitudeSpeed + time;
     SNSSatelliteTime duration = 180 / subPointLongitudeSpeed;
     
     SNSTimeRange validTimeRange;

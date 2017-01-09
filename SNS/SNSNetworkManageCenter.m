@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong, nonnull) NSMutableArray<SNSSGDataPackgeCollection *> *dpcTransporting;
 @property (nonatomic, nonnull) FILE *bufferedDataLog;
+@property (atomic) SNSDataPackageTag dpTag;
 
 @end
 
@@ -41,9 +42,15 @@
     
     if (self) {
         _dpcTransporting = [[NSMutableArray alloc] init];
+        _dpTag = 1;
     }
     
     return self;
+}
+
+- (SNSDataPackageTag)newDpTag
+{
+    return _dpTag++;
 }
 
 - (void)satellite:(SNSUserSatellite *)userSatellite didSendPackageCollection:(SNSSGDataPackgeCollection *)dpc
@@ -102,7 +109,7 @@
             
             //NSLog(@"usable delay antenna id %d", antenna.uniqueID);
             costPerformance = [antenna costPerformanceToSchedualTransmissionForUserSatellite:userSatellite withSendingAntenna:sendingAntenna];
-            //NSLog(@"cost performance:%lf", costPerformance);
+            //NSLog(@"satellite-%d antenna-%d costPerformance:%lf", userSatellite.uniqueID, antenna.uniqueID, costPerformance);
             if (costPerformance > maximumCostPerformance) {
                 theAntenna = antenna;
                 maximumCostPerformance = costPerformance;
@@ -114,6 +121,8 @@
         SNSSGDPCTTaskExecution *dpct = [theAntenna schedualTransmissionForUserSatellite:userSatellite withSendingAntenna:sendingAntenna];
         return dpct;
     }
+    
+    NSLog(@"userSatellite-%d fail to get connection", userSatellite.uniqueID);
     
     return nil;
 }
